@@ -1,0 +1,1467 @@
+
+<!--Copyright (c) 2026 Teodor Nenkov
+
+Licensed under the PolyForm Noncommercial License 1.0.0.
+Commercial use requires a separate license.
+
+See LICENSE for details.
+
+Europe, Bulgaria */-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head section and external metadata -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>magiXtral.com</title>
+    
+    <!-- Script to suppress Tailwind production warnings -->
+    <script>
+    (function() {
+        const originalWarn = console.warn;
+        console.warn = function(message) {
+            if (typeof message === 'string' && message.includes('cdn.tailwindcss.com should not be used in production')) {
+                return;
+            }
+            originalWarn.apply(console, arguments);
+        };
+    })();
+    </script>
+
+    <!-- Local Tailwind CSS library -->
+    <script src="/static/libraries/tailwind.min.js"></script>
+    
+    <!-- Custom Tailwind theme configuration for magiXtral colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        coffee: '#3E2723',
+                        sand: '#E6CCB2',
+                        gold: '#D4A373',
+                        paper: '#FDFBF7'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Local libraries for icons, fonts, and styling -->
+    <link rel="stylesheet" href="/static/style.css"> <!-- Main styles--> 
+    <link rel="stylesheet" href="/static/libraries/all.min.css"> <!-- Icons (Font Awesome)--> 
+    <link rel="stylesheet" href="/static/libraries/local-fonts.css"> <!-- Local fonts--> 
+    <link rel="stylesheet" href="/static/libraries/atom-one-dark.min.css"> <!-- Code highlighting--> 
+    <script src="/static/libraries/highlight.min.js"></script> <!-- Code highlighting-->
+    <link rel="icon" href="data:,"> <!-- Ignoring favicon error-->
+
+    <!-- Documents (PDF / DOCX / Excel) -->
+    <script src="/static/libraries/html2pdf.bundle.min.js"></script> <!-- Convert HTML → PDF -->
+    <script src="/static/libraries/jspdf.umd.min.js"></script> <!-- Create PDF -->
+    <script src="/static/libraries/pdf-lib.min.js"></script> <!-- Edit PDF -->
+    <script src="/static/libraries/pdf.min.js"></script> <!-- View PDF (PDF.js) -->
+    <script>pdfjsLib.GlobalWorkerOptions.workerSrc = '/static/libraries/pdf.worker.min.js';</script> <!-- Configure PDF.js worker -->
+    <script src="/static/libraries/html-docx.js"></script> <!-- Convert HTML → DOCX -->
+    <script src="/static/libraries/mammoth.browser.min.js"></script> <!-- Convert DOCX → HTML -->
+    <script src="/static/libraries/xlsx.full.min.js"></script> <!-- Work with Excel files -->
+    <script src="/static/libraries/jszip.min.js"></script> <!-- Create and extract ZIP files -->
+    <script src="/static/libraries/Sortable.min.js"></script> <!-- Drag & Drop ordering -->
+    <script src="/static/libraries/morphdom-umd.min.js"></script> <!-- Refreshing DOM -->
+    <script src="/static/libraries/html2canvas.min.js"></script> <!-- HTML → image -->
+    <script src="/static/libraries/qr-code-styling.js"></script> <!-- QR code generator -->
+
+
+</head>
+
+<!-- Main application container --> 
+<body class="overflow-hidden bg-[#E6CCB2]">
+
+    <!-- Global background overlay for modals -->
+    <div class="bg-overlay"></div>
+
+    <!-- Main flex wrapper for sidebar and workspace -->
+    <div class="flex h-screen w-screen overflow-hidden">
+
+        <!-- Left settings sidebar -->
+        <aside id="sidebar" class="w-[340px] min-w-[60px] max-w-[500px] sidebar-panel glass-panel flex flex-col z-10 shadow-2xl h-full relative group transition-all duration-300 bg-[#FDFBF7]/90 backdrop-blur-md">
+            
+            <div id="resizer" class="absolute right-0 top-0 bottom-0 w-1 cursor-ew-resize hover:bg-[#D4A373] z-50 transition-colors"></div>
+
+            <div class="h-[102px] flex items-center justify-center shrink-0 mt-0 overflow-hidden relative">
+               
+                <!-- Branding and logo section -->
+                <div id="main-branding" onclick="openAboutWindow()" class="relative w-full h-full flex flex-col items-center justify-center cursor-pointer group active:scale-95" title="About MAGI">
+                    
+                    <h1 id="app-logo" class="font-['Cinzel'] text-[50px] text-[#3E2723] tracking-[0.2em] drop-shadow-md whitespace-nowrap cursor-default select-none leading-none">
+                        MAGI <!-- Sidebar Logo -->
+                    </h1>
+
+                    <span class="absolute bottom-2 right-4 text-[12px] font-mono font-bold text-[#8D6E63] uppercase tracking-tighter opacity-60 whitespace-nowrap select-none">
+                        powered by <span class="text-[#D4A373]">OLACHRA</span>
+                    </span>
+                    
+                </div>
+            </div>
+
+            <!-- AI core configuration settings -->
+            <div id="sidebar-content" class="flex-1 overflow-y-auto p-0 space-y-0 opacity-100 transition-opacity duration-300">
+                
+                <!-- AI mode toggle: Insight vs AGI -->
+                <div class="grid-cell px-5"> 
+                    <div class="cell-label mb-1"><i class="fa-solid fa-brain"></i> INSIGHT</div>
+                    <div class="flex items-center justify-between bg-[#FDFBF7]/50 p-1.5 rounded border border-[#D4A373]/20">
+                        <span class="text-[14px] font-bold text-[#8D6E63] font-mono">AI MODE</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="insight-toggle" class="sr-only peer" onchange="toggleInSight()">
+                            <div class="w-12 h-4 bg-gray-300 dark:bg-gray-700 rounded-full 
+                                        after:content-[''] after:absolute after:top-[2px] after:left-[2px] 
+                                        after:bg-white after:rounded-full after:h-3 after:w-3 
+                                        after:transition-all peer-checked:after:translate-x-8 
+                                        peer-checked:bg-[#D4A373] dark:peer-checked:bg-[#D4A373] 
+                                        shadow-inner">
+                            </div>
+                        </label>
+                        <span class="text-[14px] font-bold text-[#3E2723] font-mono">AGI MODE</span>
+                    </div>
+                </div>
+
+                <!-- Temperature slider for response randomness -->
+                <div class="grid-cell px-5">
+                    <div class="cell-label mb-1"><i class="fa-solid fa-temperature-three-quarters"></i> TEMPERATURE</div>
+                    <div class="flex items-center gap-3">
+                        <input type="range" id="temp-slider" min="0" max="1" step="0.1" value="0.7" class="flex-1 h-1 bg-[#D4A373]/30 rounded-lg appearance-none cursor-pointer accent-[#D4A373]" oninput="updateTemp(this.value)">
+                        <span id="temp-value" class="font-mono text-[13px] font-bold text-[#3E2723] bg-[#D4A373]/20 px-2 py-0.5 rounded shrink-0 w-10 text-center">0.7</span>
+                    </div>
+                </div>
+
+                <!-- Engine model selection -->
+                <div class="grid-cell px-5">
+                    <div class="cell-label mb-1"><i class="fa-solid fa-microchip"></i> ENGINE MODEL</div>
+                    <select id="sel-model" class="ochre-select w-full p-1 text-sm"></select>
+                </div>
+
+                <!-- Personality dropdown -->
+                <div class="grid-cell relative flex gap-2 px-5 py-3 transition-colors duration-200">
+                    <div class="flex-1">
+                        <div class="cell-label mb-1"><i class="fa-solid fa-user"></i> PERSONALITY</div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1">
+                                <div class="magi-glow-container multi-select-trigger hover:shadow-sm transition flex justify-between items-center rounded py-1 px-1.5 cursor-pointer" 
+                                     tabindex="0" onclick="toggleDropdown(event, 'personality-list')">
+                                    <span id="personality-display" class="truncate text-[14px] font-bold">Select persona...</span>
+                                    <i class="fa-solid fa-chevron-down text-[11px] text-[#8D6E63] arrow-icon transition-transform duration-200"></i>
+                                </div>
+                                <div id="personality-list" class="dropdown-menu"></div>
+                            </div>
+                            <button onclick="openModal('personalities')" class="text-[#D4A373] hover:text-[#3E2723] transition-transform hover:scale-110 shrink-0 w-8 flex justify-center">
+                                <i class="fa-solid fa-plus text-[18px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emotionality dropdown -->
+                <div class="grid-cell relative flex gap-2 px-5 py-3 transition-colors duration-200">
+                    <div class="flex-1">
+                        <div class="cell-label mb-1"><i class="fa-solid fa-heart"></i> EMOTIONALITY</div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1">
+                                <div class="magi-glow-container multi-select-trigger hover:shadow-sm transition flex justify-between items-center rounded py-1 px-1.5 cursor-pointer" 
+                                     tabindex="0" onclick="toggleDropdown(event, 'emotion-list')">
+                                    <span id="emotion-display" class="truncate text-[14px] font-bold">Select emotion...</span>
+                                    <i class="fa-solid fa-chevron-down text-[11px] text-[#8D6E63] arrow-icon transition-transform duration-200"></i>
+                                </div>
+                                <div id="emotion-list" class="dropdown-menu"></div>
+                            </div>
+                            <button onclick="openModal('emotionalities')" class="text-[#D4A373] hover:text-[#3E2723] transition-transform hover:scale-110 shrink-0 w-8 flex justify-center">
+                                <i class="fa-solid fa-plus text-[18px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Value system dropdown -->
+                <div class="grid-cell relative flex gap-2 px-5 py-3 transition-colors duration-200">
+                    <div class="flex-1">
+                        <div class="cell-label mb-1"><i class="fa-solid fa-scale-balanced"></i> VALUE SYSTEM</div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1">
+                                <div class="magi-glow-container multi-select-trigger hover:shadow-sm transition flex justify-between items-center rounded py-1 px-1.5 cursor-pointer" 
+                                     tabindex="0" onclick="toggleDropdown(event, 'values-list')">
+                                    <span id="values-display" class="truncate text-[14px] font-bold">Select values...</span>
+                                    <i class="fa-solid fa-chevron-down text-[11px] text-[#8D6E63] arrow-icon transition-transform duration-200"></i>
+                                </div>
+                                <div id="values-list" class="dropdown-menu"></div>
+                            </div>
+                            <button onclick="openModal('values')" class="text-[#D4A373] hover:text-[#3E2723] transition-transform hover:scale-110 shrink-0 w-8 flex justify-center">
+                                <i class="fa-solid fa-plus text-[18px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RAG system: Document upload and management -->
+                <div class="grid-cell relative flex flex-col gap-2 px-5 py-3 transition-colors duration-200">
+                    <div class="flex-1 min-w-0">
+                        <div class="cell-label mb-1">
+                            <i class="fa-solid fa-folder-open"></i> DOCUMENTS (RAG)
+                        </div>
+                        
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 min-w-0">
+                                <div class="magi-glow-container multi-select-trigger hover:shadow-sm transition flex justify-between items-center rounded py-1 px-1.5 cursor-pointer" 
+                                     tabindex="0" onclick="toggleDropdown(event, 'files-list')">
+                                    <span id="files-display" class="truncate text-[14px] font-bold">Select files...</span>
+                                    <i class="fa-solid fa-chevron-down text-[11px] text-[#8D6E63] arrow-icon transition-transform duration-200"></i>
+                                </div>
+                            </div>
+
+                            <input type="file" id="file-upload-input" class="hidden" multiple onchange="handleFileUpload(this)" 
+                                   accept=".docx,.txt,.pdf,.json,.jsonl,.xlsx,.xls,.jpg,.jpeg,.png,.py,.js,.html,.css,.cpp,.c,.md">
+                            
+                            <button type="button" onclick="document.getElementById('file-upload-input').click()" 
+                                    class="text-[#D4A373] hover:text-[#3E2723] transition-transform hover:scale-110 shrink-0 w-8 flex justify-center">
+                                <i class="fa-solid fa-upload text-[18px]"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="files-list" class="dropdown-menu hidden absolute left-0 right-0 w-full z-50 overflow-x-hidden shadow-xl border border-[#D4A373]/20" 
+                         style="top: 100%; margin-top: 2px;">
+                    </div>
+                </div>
+
+                <!-- Logic system: Layers -->
+                <div class="grid-cell relative flex gap-2 px-5 py-3 transition-colors duration-200">
+                    <div class="flex-1">
+                        <div class="cell-label mb-1"><i class="fa-solid fa-rainbow"></i> SYSTEM LAYERS</div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 relative">
+                                <div class="magi-glow-container multi-select-trigger hover:shadow-sm transition flex justify-between items-center rounded py-1 px-1.5 cursor-pointer" 
+                                     tabindex="0" onclick="toggleDropdown(event, 'layers-list')">
+                                    <span id="layers-display" class="truncate text-[14px] font-bold">Select layers...</span>
+                                    <i class="fa-solid fa-chevron-down text-[11px] text-[#8D6E63] arrow-icon transition-transform duration-200"></i>
+                                </div>
+                                <div id="layers-list" class="dropdown-menu"></div>
+                            </div>
+                            <button onclick="openModal('layers')" class="text-[#D4A373] hover:text-[#3E2723] transition-transform hover:scale-110 shrink-0 w-8 flex justify-center">
+                                <i class="fa-solid fa-dharmachakra text-[20px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- mideXtral link -->
+                <a href="scriptoria.html" class="flex items-center gap-4 w-full h-12 text-[#3E2723] hover:bg-white/60 transition-colors cursor-pointer group px-5 border-t border-b border-[#D4A373]/10 no-underline mt-2">
+                    <div class="flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-code text-lg"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="block font-['Cinzel'] font-bold leading-none text-[18px]">mideXtral</span>
+                    </div>
+                </a>
+
+            </div> 
+
+            <!-- Sidebar collapse trigger and status display --> 
+            <div class="h-12 flex items-center justify-center bg-transparent shrink-0 relative">
+                
+                <button onclick="toggleSidebar()" class="sidebar-collapse-btn">
+                    <i id="collapse-icon" class="fa-solid fa-angles-left"></i>
+                </button>
+
+                <div id="status-container" class="h-full flex items-center justify-center transition-opacity duration-300">
+                    <div id="mode-name-display" class="font-mono text-[14px] font-bold text-[#3E2723] tracking-[0.2em] uppercase opacity-80 leading-none">
+                        INITIALIZING...
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Central chat and content area -->
+        <div class="flex-1 flex flex-col h-full overflow-hidden relative bg-[#FDFBF7]">
+            
+            <!-- Session tabs navigation bar -->
+            <nav id="tabs-container" class="shrink-0 relative w-full z-20 flex items-center px-2 h-10 bg-[#E6CCB2]/20 border-b border-[#D4A373]/10 no-scrollbar overflow-x-auto">
+                <button onclick="addNewTab()" class="w-7 h-7 rounded-full border border-[#D4A373]/30 text-[#D4A373] hover:bg-[#D4A373] hover:text-white transition-all flex items-center justify-center ml-2 shrink-0">
+                    <i class="fa-solid fa-plus text-xs"></i>
+                </button>
+            </nav>
+
+            <!-- Main header -->
+            <header id="main-header" class="h-[60px] flex items-center bg-white/80 backdrop-blur-sm border-b border-[#D4A373]/20 shrink-0 z-40 shadow-sm w-full transition-opacity duration-300 overflow-hidden">
+                <div class="bar-content-wrapper flex items-center justify-between w-full h-full px-4 gap-2 transition-transform duration-200">
+                    <div class="flex items-center gap-2 shrink-0">
+                        <div class="flex items-center gap-2">
+
+                            <!-- Previous session button -->
+                            <button onclick="navigateSession('prev')" class="nav-session-btn w-9 h-9 flex items-center justify-center bg-[#FDFBF7] border border-[#D4A373]/40 rounded active:scale-90 transition-all shadow-sm" title="Previous Session">
+                                <i class="fa-solid fa-chevron-left text-[14px]"></i>
+                            </button>
+
+                            <!-- Next session button -->
+                            <button onclick="navigateSession('next')" class="nav-session-btn w-9 h-9 flex items-center justify-center bg-[#FDFBF7] border border-[#D4A373]/40 rounded active:scale-90 transition-all shadow-sm" title="Next Session">
+                                <i class="fa-solid fa-chevron-right text-[14px]"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- New session button -->
+                        <button onclick="createNewSession()" class="new-chat-btn shrink-0 text-xs font-mono font-black uppercase tracking-widest border border-[#D4A373]/40 px-3 rounded hover:shadow-sm transition-all active:scale-95 h-9 flex items-center">
+                            <i class="fa-solid fa-plus mr-2 text-[14px]"></i> 
+                            <span class="header-text">New Chat</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Address bar session container -->
+                    <div id="address-bar-container" class="flex-1 min-w-0 relative mx-2">
+                        <div class="magi-glow-container address-bar-sync rounded-md h-9 relative cursor-pointer group w-full" 
+                             onclick="toggleDropdown(event, 'session-dropdown')" tabindex="0">
+                    
+                            <div class="flex items-center h-full px-3 relative z-10 w-full transition-all duration-200">
+                                <span class="address-icon-wrap mr-2 text-xs transition-colors">
+                                    <i class="fa-solid fa-note-sticky"></i>
+                                </span>
+                    
+                                <input id="session-name-input" type="text" 
+                                       class="w-full bg-transparent border-none outline-none font-['JetBrains_Mono'] font-bold text-[18px] cursor-pointer transition-colors" 
+                                       value="New Session" readonly>
+                    
+                                <i id="session-arrow" class="fa-solid fa-chevron-down text-[18px] transition-all duration-300 ml-2"></i>
+                            </div>
+                        </div>
+
+                        <!-- Session dropdown -->
+                        <div id="session-dropdown" class="session-dropdown-sync dropdown-menu absolute top-full left-0 w-full mt-1 shadow-xl rounded-md flex flex-col overflow-hidden z-[100] hidden" style="display: none;"> 
+                            <!-- Search container -->
+                            <div class="dropdown-search-container p-2 border-b sticky top-0 z-10">
+                                <div class="relative flex items-center">
+                                    <i class="fa-solid fa-search absolute left-2 search-icon-gold text-xs"></i>
+                                    <input type="text" id="session-search" placeholder="Search sessions..." 
+                                           class="session-search-input w-full pl-7 pr-2 py-1.5 text-sm rounded outline-none transition-all" 
+                                           onkeyup="filterSessions()" onclick="event.stopPropagation()"> 
+                                </div>
+                            </div>
+                            <!-- Session list -->
+                            <div id="session-list-container" class="max-h-[300px] overflow-y-auto custom-scrollbar"></div>
+                        </div>
+                    </div>
+
+                    <!-- Web search controls and Serper API management -->
+                    <div class="flex items-center gap-2 shrink-0">
+                        <!-- Web search container -->
+                        <div id="web-search-wrapper" class="web-search-sync flex h-9 items-center relative shrink-0 shadow-sm rounded border transition-all">
+                    
+                            <!-- Button Web Off/On -->
+                            <button id="web-search-toggle-btn" class="web-btn-sync shrink-0 text-xs font-mono font-black uppercase tracking-widest bg-transparent px-3 transition-all active:scale-95 h-full flex items-center rounded-l" onclick="toggleWebSearch()"> 
+                                <i class="fa-solid fa-globe mr-1.5"></i><span id="web-status-text" class="header-text">Web Off</span>
+                            </button>
+                    
+                            <!-- Web divider -->
+                            <div class="web-divider w-px h-5"></div>
+                    
+                            <!-- Serper key button -->
+                            <button class="key-btn-sync shrink-0 bg-transparent h-full flex items-center justify-center px-2.5 cursor-pointer transition-all duration-200 active:scale-90 rounded-r" onclick="toggleDropdown(event, 'serper-key-dropdown')" title="Serper API Key">
+                                <i class="fa-solid fa-key text-[11px]"></i>
+                            </button>
+                    
+                            <!-- Serper keys dropdown -->
+                            <div id="serper-key-dropdown" class="serper-dropdown-sync dropdown-menu w-[250px] mt-1 left-0 top-full absolute z-50 shadow-xl rounded-md p-1 hidden" style="display: none;">
+                                <div class="serper-header text-[10px] font-bold uppercase px-2 py-1.5 mb-1 border-b flex justify-between items-center">
+                                    <span>Active Key:</span><span id="serper-display-name" class="serper-active-name truncate max-w-[120px]">None</span>
+                                </div>
+                                
+                                <!-- Serper keys list  -->
+                                <div id="serper-keys-list"></div>
+                                
+                                <div class="serper-footer border-t mt-1 pt-1">
+                                    <button onclick="openModal('serper_keys')" class="new-chat-btn w-full justify-center">
+                                        <i class="fa-solid fa-plus mr-2"></i> Add New Key
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="serper-display" data-value="" class="hidden"></div>
+                        </div>
+
+                        <!-- Global export options and theme toggle -->
+                        <div class="relative flex items-center">
+                            <button onclick="toggleDropdown(event, 'export-dropdown')" class="shrink-0 text-xs font-mono font-black uppercase tracking-widest border border-[#D4A373]/40 bg-[#FDFBF7] text-[#D4A373] px-3 rounded hover:bg-white hover:text-[#3E2723] hover:shadow-sm transition-all active:scale-95 h-9 flex items-center">
+                                <i class="fa-solid fa-download mr-2"></i> <span class="header-text">Export</span>
+                            </button>
+                            <div id="export-dropdown" class="dropdown-menu w-[220px] mt-1 absolute z-50 bg-[#FDFBF7] border border-[#D4A373]/20 shadow-xl rounded-md p-1 overflow-hidden hidden" style="right: 0; left: auto; top: 100%;">
+                                <div class="text-[10px] font-bold text-[#8D6E63] uppercase px-2 py-1.5 mb-1 border-b border-[#D4A373]/20">Select Format:</div>
+                                <button onclick="exportSession('docx')" class="w-full text-left px-3 py-2 text-[12px] font-bold text-[#3E2723] hover:bg-white hover:text-[#D4A373] rounded transition-colors flex items-center whitespace-nowrap"><i class="fa-solid fa-file-word text-[18px] w-7 text-blue-600"></i> .DOCX</button>
+                                <button onclick="exportSession('pdf')" class="w-full text-left px-3 py-2 text-[12px] font-bold text-[#3E2723] hover:bg-white hover:text-[#D4A373] rounded transition-colors flex items-center whitespace-nowrap"><i class="fa-solid fa-file-pdf text-[18px] w-7 text-red-600"></i> .PDF</button>
+                                <button onclick="exportSession('txt')" class="w-full text-left px-3 py-2 text-[12px] font-bold text-[#3E2723] hover:bg-white hover:text-[#D4A373] rounded transition-colors flex items-center whitespace-nowrap"><i class="fa-solid fa-file-lines text-[18px] w-7 text-gray-500"></i> .TXT</button>
+                                <button onclick="exportSession('jsonl_lmft')" class="w-full text-left px-3 py-2 text-[12px] font-bold text-[#3E2723] hover:bg-white hover:text-[#D4A373] rounded transition-colors flex items-center whitespace-nowrap"><i class="fa-solid fa-database text-[18px] w-7 text-amber-600"></i> .JSONL (LMFT)</button>
+                                <button onclick="exportSession('jsonl_ift')" class="w-full text-left px-3 py-2 text-[12px] font-bold text-[#3E2723] hover:bg-white hover:text-[#D4A373] rounded transition-colors flex items-center whitespace-nowrap"><i class="fa-solid fa-database text-[18px] w-7 text-amber-800"></i> .JSONL (IFT)</button>
+                            </div>
+                        </div>
+
+                        <!-- Day and night mode -->
+                        <button id="dark-mode-btn" class="shrink-0 rounded bg-[#FDFBF7] border border-[#D4A373]/40 h-9 flex items-center justify-center w-9 cursor-pointer transition-all duration-200 hover:bg-white hover:text-[#3E2723] text-[#D4A373] active:scale-90 shadow-sm" onclick="toggleTheme()" title="Day/Night">
+                            <i id="theme-icon" class="fa-solid fa-moon text-[14px]"></i>
+                        </button>
+
+                    </div>
+                </div>
+            </header>
+
+            <!-- Primary chat message display -->
+            <main id="chat-container" class="flex-1 overflow-y-auto p-8 space-y-6 scroll-smooth bg-[#FDFBF7] relative z-10 pb-32 transition-opacity duration-300">
+            </main>
+
+            <!-- User input area and prompt tools -->
+            <div id="chat-input-area" class="absolute bottom-[70px] left-0 right-0 z-30 px-6 pb-6 pointer-events-none flex justify-center transition-opacity duration-300">
+                
+                <div class="w-full max-w-4xl relative flex items-center justify-center">
+
+                    <!-- Prompt history navigator -->
+                    <div id="prompt-navigator" class="absolute right-full mr-4 bottom-3 flex items-center gap-1 pointer-events-auto z-40">
+                        <button onclick="navigatePrompts('first')" class="shrink-0 text-[14px] font-mono font-black border border-[#D4A373]/40 bg-[#FDFBF7] text-[#D4A373] w-8 h-8 rounded hover:bg-white hover:text-[#3E2723] hover:shadow-sm transition-all active:scale-95 flex items-center justify-center" title="Go to first prompt"><i class="fa-solid fa-angles-left"></i></button>
+                        <button onclick="navigatePrompts('prev')" class="shrink-0 text-[14px] font-mono font-black border border-[#D4A373]/40 bg-[#FDFBF7] text-[#D4A373] w-8 h-8 rounded hover:bg-white hover:text-[#3E2723] hover:shadow-sm transition-all active:scale-95 flex items-center justify-center" title="Previous prompt"><i class="fa-solid fa-angle-left"></i></button>
+                        <div class="shrink-0 text-[11px] font-mono font-black tracking-widest border border-[#D4A373]/40 bg-[#FDFBF7] text-[#3E2723] px-2.5 h-8 rounded hover:bg-white hover:shadow-sm transition-all flex items-center justify-center">
+                            <input type="text" id="prompt-jump-input" class="w-5 text-center bg-transparent border-none outline-none p-0 text-[#3E2723] font-bold" value="1" onkeydown="if(event.key==='Enter') jumpToPrompt(this.value)">
+                            <span class="opacity-50 select-none mx-0.5 text-[#D4A373]">/</span>
+                            <span id="prompt-total-count" class="opacity-80 select-none text-[#D4A373]">1</span>
+                        </div>
+                        <button onclick="navigatePrompts('next')" class="shrink-0 text-[14px] font-mono font-black border border-[#D4A373]/40 bg-[#FDFBF7] text-[#D4A373] w-8 h-8 rounded hover:bg-white hover:text-[#3E2723] hover:shadow-sm transition-all active:scale-95 flex items-center justify-center" title="Next prompt"><i class="fa-solid fa-angle-right"></i></button>
+                        <button onclick="navigatePrompts('last')" class="shrink-0 text-[14px] font-mono font-black border border-[#D4A373]/40 bg-[#FDFBF7] text-[#D4A373] w-8 h-8 rounded hover:bg-white hover:text-[#3E2723] hover:shadow-sm transition-all active:scale-95 flex items-center justify-center" title="Go to last prompt"><i class="fa-solid fa-angles-right"></i></button>
+                    </div>
+
+                    <div class="magi-glow-container glass-mode rounded-2xl shadow-lg relative w-full pointer-events-auto" tabindex="0">
+                        <div class="relative z-10"> 
+
+                            <!-- Appstrale: Internal application launcher -->
+                            <div class="absolute left-3 bottom-3 z-20">
+                                <button onclick="toggleDropdown(event, 'apps-menu')" class="p-2 text-[#D4A373] hover:text-[#3E2723] transition-all" title="Appstrale">
+                                    <i class="fa-solid fa-layer-group text-[22px]"></i>
+                                </button>
+                                
+                                <div id="apps-menu" class="dropdown-menu w-[200px] absolute z-50 bg-[#FDFBF7] border border-[#D4A373]/20 shadow-xl rounded-md p-1 hidden" style="bottom: 100%; left: 0; margin-bottom: 8px;">
+                                    <!-- WEBZTRAL -->
+                                    <button onclick="openMagiApp('browser')" class="w-full text-left px-3 py-2 text-xs font-bold text-[#3E2723] hover:bg-[#D4A373]/15 rounded transition-colors flex items-center gap-2">
+                                        <i class="fa-solid fa-globe text-[16px] text-[#D4A373]"></i> Webztral
+                                    </button>
+                                    <!-- DOCSTRAL -->
+                                    <button onclick="openDocstral()" class="w-full text-left px-3 py-2 text-xs font-bold text-[#3E2723] hover:bg-[#D4A373]/15 rounded transition-colors flex items-center gap-2">
+                                        <i class="fa-solid fa-file-signature text-[16px] text-[#D4A373]"></i> Docstral
+                                    </button>
+                                    <!-- IMVISTRAL -->
+                                    <button onclick="showToast('In development')" class="w-full text-left px-3 py-2 text-xs font-bold text-[#8D6E63] hover:bg-gray-100 rounded transition-colors flex items-center gap-2 opacity-100">
+                                        <i class="fa-solid fa-file-waveform text-[16px]"></i> Imvistral
+                                    </button>
+                                    <!-- FILE MANAGER -->
+                                    <button onclick="openMagiApp('filemanager')" class="w-full text-left px-3 py-2 text-xs font-bold text-[#3E2723] hover:bg-[#D4A373]/15 rounded transition-colors flex items-center gap-2">
+                                        <i class="fa-solid fa-folder-tree text-[16px] text-[#D4A373]"></i> File Manager
+                                    </button>
+
+                                    <div class="h-px bg-[#D4A373]/20 my-1 mx-2"></div>
+                                    <!-- LE CHAT -->
+                                    <button onclick="window.open('https://chat.mistral.ai/chat', '_blank')" class="w-full text-left px-3 py-2 text-xs font-bold text-[#3E2723] hover:bg-[#D4A373]/15 rounded transition-colors flex items-center gap-2">
+                                        <img src="/static/colleague-icon.png" alt="Colleague" class="w-[16px] h-[16px] object-contain shrink-0"> Ask a colleague
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Main textarea for AI communication -->
+                            <textarea 
+                                id="user-input" 
+                                class="w-full bg-transparent border-none outline-none font-mono text-sm text-[#3E2723] resize-none max-h-48 min-h-[56px] py-4 pl-14 pr-16 placeholder-[#8D6E63]/60 leading-relaxed rounded-2xl relative z-10 overflow-y-hidden custom-chat-scroll" 
+                                placeholder="Ask Magi..." 
+                                rows="1" 
+                                oninput="
+                                    this.style.height = ''; 
+                                    this.style.height = this.scrollHeight + 'px'; 
+                                    this.style.overflowY = (this.scrollHeight > 192) ? 'auto' : 'hidden';
+                                " 
+                                onkeydown="handleInputKey(event)" 
+                                style="height: 56px;"
+                            ></textarea>
+
+                            <div class="absolute right-3 bottom-3 flex items-center gap-2 z-20">
+                                <!-- SEND MESSAGE BUTTON -->
+                                <button id="main-action-btn" onclick="sendMessage()" 
+                                        class="p-2 transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center w-10 h-10 rounded-full group">
+                                    <i id="main-action-icon" class="fa-solid fa-paper-plane text-xl transition-all"></i>
+                                </button>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="absolute left-full ml-4 bottom-3 flex items-center gap-2 pointer-events-auto z-40">
+                        <!-- Clear text button -->
+                        <button onclick="clearUserInput()" 
+                                class="shrink-0 border border-[#D4A373]/40 bg-[#FDFBF7] text-[#D4A373] w-9 h-9 rounded hover:bg-white hover:text-[#3E2723] hover:shadow-sm transition-all active:scale-95 flex items-center justify-center" 
+                                title="Clear Text">
+                            <i class="fa-solid fa-comment-slash text-lg"></i>
+                        </button>
+
+                        <!-- Astral projection bubble -->
+                        <button id="astral-bubble" onclick="restoreAstral()" 
+                                class="shrink-0 border border-[#D4A373]/40 bg-[#FDFBF7] text-[#D4A373] w-9 h-9 rounded hover:bg-white hover:text-[#3E2723] hover:shadow-sm transition-all active:scale-95 flex items-center justify-center" 
+                                title="Astral Projection" style="display: flex;">
+                            <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom navigation tabs for system modes -->
+            <div id="mode-tabs" class="flex border-t border-[#D4A373]/20 bg-[#F5E6D3] shrink-0 h-12 z-40 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] relative transition-opacity duration-300 overflow-x-auto no-scrollbar">
+                <div onclick="setMode(1)" class="mode-tab group shrink-0 min-w-[140px] px-2 flex items-center justify-center gap-2 flex-1" id="tab-1" title="Recursive loop (Incongnito)">
+                    <i class="fa-regular fa-lightbulb text-sm"></i>
+                    <span class="whitespace-nowrap">Fully passive</span>
+                </div>
+                <div onclick="setMode(2)" class="mode-tab group shrink-0 min-w-[140px] px-2 flex items-center justify-center gap-2 flex-1" id="tab-2" title="Chatbot (Incongnito)">
+                    <i class="fa-regular fa-comment text-sm"></i>
+                    <span class="whitespace-nowrap">Partially passive</span>
+                </div>
+                <div onclick="setMode(3)" class="mode-tab group shrink-0 min-w-[140px] px-2 flex items-center justify-center gap-2 flex-1" id="tab-3" title="Recursive loop (With Save)">
+                    <i class="fa-solid fa-lightbulb text-sm"></i>
+                    <span class="font-bold whitespace-nowrap">Fully active</span>
+                </div>
+                <div onclick="setMode(4)" class="mode-tab mode-active group shrink-0 min-w-[140px] px-2 flex items-center justify-center gap-2 flex-1" id="tab-4" title="Chatbot (With Save)">
+                    <i class="fa-solid fa-comment text-sm"></i>
+                    <span class="font-bold whitespace-nowrap">Partially active</span>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Configuration and system prompt editor modal -->
+    <div id="config-modal" class="hidden fixed inset-0 bg-[#3E2723]/70 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300">
+        <div class="glass-panel p-6 rounded-lg w-[450px] shadow-2xl bg-[#FDFBF7] transform scale-100 transition-transform border border-[#D4A373]">
+            <h2 class="font-bold mb-4 font-mono text-lg text-[#3E2723] border-b border-[#D4A373] pb-2 flex justify-between items-center">
+                <span><span id="modal-type-title"></span></span>
+                <i class="fa-solid fa-pen-nib text-[#D4A373]"></i>
+            </h2>
+            <input id="new-name" type="text" placeholder="Name / Title" class="w-full p-2 mb-4 bg-white border border-[#D4A373] rounded outline-none font-mono text-sm focus:ring-1 focus:ring-[#D4A373]">
+            <textarea id="new-system" placeholder="System Prompt / Description / Rules..." class="w-full p-2 mb-6 bg-white border border-[#D4A373] rounded outline-none font-mono text-sm h-40 resize-none focus:ring-1 focus:ring-[#D4A373]"></textarea>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeModal()" class="px-4 py-2 text-xs font-bold uppercase text-[#8D6E63] hover:bg-[#E6CCB2] rounded transition-colors">Cancel</button>
+                <button onclick="saveConfig()" class="px-4 py-2 bg-[#D4A373] text-white text-xs font-bold uppercase rounded hover:bg-[#3E2723] transition-colors shadow-md">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Serper API key input modal -->
+    <div id="serper-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[100]">
+        <div class="glass-panel p-6 rounded-xl w-[400px] bg-[#FDFBF7] border border-[#D4A373] shadow-2xl flex flex-col gap-4">
+            <div class="text-center text-[#3E2723]">
+                <i class="fa-solid fa-key text-2xl mb-2 text-[#D4A373]"></i>
+                <h2 class="font-bold font-mono text-lg">WEB SEARCH ACCESS</h2>
+            </div>
+            <p class="text-xs text-center text-[#8D6E63] mb-2">Enter or update your Serper.dev API key.</p>
+            <input id="serper-key-input" type="password" class="w-full p-3 bg-white border border-[#D4A373] rounded outline-none font-mono text-sm" placeholder="Paste your Serper API Key...">
+            <div class="flex gap-2">
+                <button onclick="saveSerperKey()" class="flex-1 py-2 bg-[#D4A373] text-white font-bold rounded hover:bg-[#3E2723] transition-colors">SAVE & ENABLE</button>
+                <button onclick="closeSerperModal()" class="flex-1 py-2 text-[#8D6E63] font-bold rounded hover:bg-gray-100 transition-colors">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global toast notification system -->
+    <div id="toast" class="fixed top-20 right-5 bg-[#3E2723] text-[#FAEDCD] px-5 py-3 rounded shadow-xl transform translate-x-[150%] transition-transform duration-300 z-[200] font-mono text-xs border-l-4 border-[#D4A373] flex items-center gap-3">
+        <i class="fa-solid fa-circle-info text-[#D4A373] text-lg"></i>
+        <span id="toast-message">Notification</span>
+    </div>
+
+    <!-- Bookmark editor modal -->
+    <div id="bookmark-modal" class="hidden fixed inset-0 bg-[#3E2723]/70 backdrop-blur-sm flex items-center justify-center z-[300] transition-opacity duration-300">
+        <div class="glass-panel p-6 rounded-lg w-[350px] shadow-2xl bg-[#FDFBF7] border border-[#D4A373]">
+            <h2 class="font-bold mb-4 font-mono text-sm text-[#3E2723] border-b border-[#D4A373]/40 pb-2 flex items-center gap-2">
+                <i class="fa-solid fa-bookmark text-[#D4A373]"></i> <span id="bm-modal-title">Add a bookmark</span>
+            </h2>
+            
+            <label class="block text-[10px] font-bold text-[#8D6E63] uppercase mb-1">Name</label>
+            <input id="bm-name" type="text" placeholder="For example: Google" class="w-full p-2 mb-3 bg-white border border-[#D4A373]/50 rounded outline-none font-mono text-xs focus:border-[#D4A373]">
+            
+            <label class="block text-[10px] font-bold text-[#8D6E63] uppercase mb-1">URL address</label>
+            <input id="bm-url" type="text" placeholder="https://..." class="w-full p-2 mb-5 bg-white border border-[#D4A373]/50 rounded outline-none font-mono text-xs focus:border-[#D4A373]">
+            
+            <div class="flex justify-between items-center">
+                <button id="bm-delete-btn" onclick="deleteBookmark()" 
+                    class="px-3 py-1.5 text-xs font-bold uppercase rounded transition-all duration-200 border" 
+                    style="display: block;">
+                    Delete
+                </button>
+                <div class="flex gap-2 ml-auto">
+                    <button onclick="closeBookmarkModal()" class="px-3 py-1.5 text-xs font-bold uppercase text-[#8D6E63] hover:bg-[#E6CCB2] rounded transition-colors">Cancel</button>
+                    <button onclick="saveBookmark()" class="px-3 py-1.5 bg-[#D4A373] text-white text-xs font-bold uppercase rounded hover:bg-[#3E2723] transition-colors shadow-sm">Save</button>
+                </div>
+            </div>
+                        </div>
+                    </div>
+
+                    <!-- Webztral: Integrated Web Browser -->
+                    <div id="browser-window" class="hidden fixed top-[100px] right-20 w-[850px] h-[550px] bg-[#FDFBF7] rounded-lg shadow-2xl border border-[#D4A373]/50 flex flex-col z-[200] overflow-hidden" style="min-width: 500px; min-height: 400px;">
+                        
+                        <div class="resizer resizer-top" data-dir="n"></div>
+                        <div class="resizer resizer-bottom" data-dir="s"></div>
+                        <div class="resizer resizer-left" data-dir="w"></div>
+                        <div class="resizer resizer-right" data-dir="e"></div>
+                        <div class="resizer resizer-tl" data-dir="nw"></div>
+                        <div class="resizer resizer-tr" data-dir="ne"></div>
+                        <div class="resizer resizer-bl" data-dir="sw"></div>
+                        <div class="resizer resizer-br" data-dir="se"></div>
+
+                        <div id="browser-header" class="flex justify-between items-center bg-[#FDFBF7] text-[#3E2723] px-3 py-1.5 select-none cursor-grab active:cursor-grabbing relative z-30 border-b border-[#D4A373]/30 shrink-0 h-9">
+                            <div class="text-xs font-mono font-black uppercase tracking-widest flex items-center">
+                                <i class="fa-solid fa-globe text-[#D4A373] mr-2 text-sm"></i> Webztral
+                            </div>
+
+                            <div class="flex gap-1.5 items-center">
+                                <button onclick="minimizeBrowser()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 flex items-center justify-center transition-all">
+                                    <i class="fa-solid fa-minus text-base"></i>
+                                </button>
+
+                                <button onclick="toggleMaximizeBrowser()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 flex items-center justify-center transition-all">
+                                    <i id="maximize-icon" class="fa-regular fa-window-maximize"></i>
+                                </button>
+
+                                <button onclick="closeBrowser()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-red-500 hover:text-white active:scale-95 flex items-center justify-center transition-all">
+                                    <i class="fa-solid fa-xmark text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col relative z-20 flex-1 min-h-0 w-full h-full">
+                            
+                            <div class="flex items-center gap-2 p-1 px-3 bg-[#FDFBF7] border-b border-[#D4A373]/20 shrink-0 h-9 relative z-30">
+                                
+                                <div class="flex items-center gap-1 shrink-0">
+                                    <button onclick="browserGoBack()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 flex items-center justify-center transition-all">
+                                        <i class="fa-solid fa-arrow-left text-xs"></i>
+                                    </button>
+                                    <button onclick="browserGoForward()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 flex items-center justify-center transition-all">
+                                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                                    </button>
+                                    <button onclick="navigateBrowser()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 flex items-center justify-center transition-all">
+                                        <i class="fa-solid fa-rotate-right text-xs"></i>
+                                    </button>
+                                    <button onclick="browserGoHome()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 flex items-center justify-center transition-all ml-1" title="Home">
+                                        <i class="fa-solid fa-house-chimney text-xs"></i>
+                                    </button>
+                                </div>
+                                
+                                <!-- Browser URL bar and navigation tools -->
+                                <div class="flex-1 flex items-center bg-white border border-[#D4A373]/50 rounded px-2 focus-within:border-[#D4A373] focus-within:shadow-md transition-all h-7 shadow-sm">
+                                    <input type="text" 
+                                            id="browser-url" 
+                                            placeholder="Search in Google or enter URL..." 
+                                            autocomplete="off" 
+                                            spellcheck="false"
+                                            autocorrect="off"
+                                            autocapitalize="off"
+                                            class="flex-1 bg-transparent text-xs font-mono outline-none text-[#3E2723] placeholder-[#8D6E63]/50" 
+                                            onkeypress="if(event.key === 'Enter') window.navigateBrowser()">
+                                    
+                                    <button onclick="openBookmarkModal()" class="text-[#D4A373] hover:text-black ml-2 px-1 transition-all active:scale-95 text-[15px]" title="Add Bookmark">
+                                        <i class="fa-regular fa-star"></i>
+                                    </button>
+                                    
+                                    <div class="relative flex items-center">
+                                        <button onclick="toggleDropdown(event, 'browser-history-dropdown'); renderHistoryDropdown();" 
+                                                class="text-[#D4A373] hover:text-black ml-1 px-1.5 transition-all active:scale-95 text-[15px]" title="Session History">
+                                            <i class="fa-solid fa-clock-rotate-left"></i>
+                                        </button>
+                                        
+                                        <div id="browser-history-dropdown" class="dropdown-menu w-[250px] absolute z-50 bg-[#FDFBF7] border border-[#D4A373]/40 shadow-xl rounded-md p-1 hidden right-0" style="top: 100%; right: 0; left: auto; margin-top: 6px;">
+                                            <div class="text-[10px] font-bold text-[#8D6E63] uppercase px-2 py-1.5 border-b border-[#D4A373]/20 mb-1 flex justify-between items-center">
+                                                <span>History</span>
+                                                <button onclick="clearSpaceHistory()" class="text-red-400 hover:text-red-600 transition-colors" title="Clear History">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </div>
+                                            <div id="browser-history-list" class="max-h-[200px] overflow-y-auto no-scrollbar flex flex-col gap-0.5"></div>
+                                        </div>
+                                    </div>
+
+                                    <button onclick="triggerSmartNavigate()" class="text-[#D4A373] hover:text-black ml-2 px-1 transition-all active:scale-95 text-[15px]" title="Go">
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </div>
+
+                                <div class="relative flex items-center shrink-0 ml-1">
+                                    <button onclick="toggleDropdown(event, 'browser-export-menu')" 
+                                            class="h-7 w-[110px] flex items-center justify-center bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all text-[11px] font-black uppercase font-mono tracking-wider">
+                                        <i class="fa-solid fa-camera mr-1.5 text-xs"></i> Export
+                                    </button>
+                                    
+                                    <div id="browser-export-menu" class="dropdown-menu hidden w-[200px] absolute z-50 bg-[#FDFBF7] border border-[#D4A373]/50 shadow-xl rounded-md flex-col divide-y divide-[#D4A373]/20 origin-top-right" style="top: 100%; right: 0; left: auto; margin-top: 6px;">
+                                        <button onclick="handleBrowserExport('selected')" class="w-full px-3 py-2 text-left hover:bg-[#D4A373]/15 hover:text-[#3E2723] transition-colors flex items-center gap-2 text-[11px] font-bold uppercase font-mono text-[#8D6E63]">
+                                            <i class="fa-solid fa-crop-simple text-sm w-5 text-center"></i> Selected to PNG
+                                        </button>
+                                        <button onclick="handleBrowserExport('visible')" class="w-full px-3 py-2 text-left hover:bg-[#D4A373]/15 hover:text-[#3E2723] transition-colors flex items-center gap-2 text-[11px] font-bold uppercase font-mono text-[#8D6E63]">
+                                            <i class="fa-solid fa-display text-sm w-5 text-center"></i> Visible to PNG
+                                        </button>
+                                        <button onclick="handleBrowserExport('full')" class="w-full px-3 py-2 text-left hover:bg-[#D4A373]/15 hover:text-[#3E2723] transition-colors flex items-center gap-2 text-[11px] font-bold uppercase font-mono text-[#8D6E63]">
+                                            <i class="fa-solid fa-file-image text-sm w-5 text-center"></i> Full to PNG
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between bg-[#F5E6D3]/50 border-b border-[#D4A373]/20 h-9 shrink-0 px-3 relative z-20">
+                                
+                                <div id="bookmarks-bar" class="flex items-center gap-2 flex-1 text-xs font-bold text-[#8D6E63] overflow-x-auto no-scrollbar mr-2">
+                                </div>
+
+                                <button onclick="openOutside()" class="h-7 w-[110px] flex items-center justify-center bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all text-[11px] font-black uppercase font-mono tracking-wider shrink-0">
+                                    <i class="fa-solid fa-arrow-up-right-from-square mr-1.5 text-xs"></i> OUTSIDE
+                                </button>
+                            </div>
+
+                            <div id="browser-content-area" class="flex-1 min-h-0 overflow-hidden bg-black relative flex flex-col w-full h-full z-10">
+                                
+                                <div id="browser-loader" class="absolute inset-0 flex flex-col items-center justify-center text-[#D4A373] bg-[#FDFBF7] z-10">
+                                    <i class="fa-solid fa-globe text-5xl mb-3 opacity-50"></i>
+                                    <p class="font-mono text-[11px]">Loading content...</p>
+                                </div>
+                                
+                                <div id="screenshot-overlay" class="hidden absolute inset-0 z-[100] cursor-crosshair bg-black/10">
+                                    <div id="screenshot-selection" class="hidden absolute border-2 border-dashed border-[#D4A373] bg-[#D4A373]/20 shadow-[0_0_0_9999px_rgba(0,0,0,0.4)]"></div>
+                                    <div id="screenshot-controls" class="hidden absolute flex gap-1 z-[110] shadow-lg">
+                                        <button onclick="confirmScreenshot()" class="bg-[#D4A373] text-white px-3 py-1.5 rounded-l text-[10px] uppercase font-black tracking-widest hover:bg-[#8D6E63] transition-colors"><i class="fa-solid fa-download mr-1"></i> Save</button>
+                                        <button onclick="cancelScreenshotSelection()" class="bg-white text-red-500 px-3 py-1.5 rounded-r text-[10px] uppercase font-black border border-l-0 border-gray-200 hover:bg-gray-100 transition-colors"><i class="fa-solid fa-xmark"></i></button>
+                                    </div>
+                                </div>
+
+                                <canvas id="browser-canvas" tabindex="0" class="w-full h-full block outline-none" style="image-rendering: optimizeQuality;"></canvas>
+                            </div>
+
+                        </div>
+                    </div> 
+
+                    <div id="browser-bubble" onclick="restoreBrowser()" 
+                         class="fixed bottom-[110px] right-8 w-11 h-11 bg-[#FDFBF7] hover:bg-[#F5E6D3] transition-all cursor-pointer rounded-full shadow-2xl border-2 border-[#D4A373] flex items-center justify-center text-[#D4A373] hover:text-[#3E2723] magi-glow-container hover:shadow-[0_0_15px_rgba(212,163,115,0.6)]"
+                         style="display: none; z-index: 40;" title="Restore Webztral">
+                        <i class="fa-solid fa-globe text-lg"></i>
+                    </div>
+
+                    <!-- File Manager: Integrated storage and file editor -->
+                    <div id="fm-bubble" onclick="restoreFileManager()" 
+                         class="fixed bottom-[250px] right-8 w-11 h-11 bg-[#FDFBF7] hover:bg-[#F5E6D3] transition-all cursor-pointer rounded-full shadow-2xl border-2 border-[#D4A373] flex items-center justify-center text-[#D4A373] hover:text-[#3E2723] magi-glow-container hover:shadow-[0_0_15px_rgba(212,163,115,0.6)]"
+                         style="display: none; z-index: 40;" title="Restore File Manager">
+                        <i class="fa-solid fa-folder-open text-lg"></i>
+                    </div>
+
+                    <div id="fm-window" class="hidden fixed top-[100px] left-[15%] w-[1200px] h-[600px] bg-[#FDFBF7] rounded-lg shadow-2xl border border-[#D4A373]/50 flex flex-col z-[150] overflow-hidden font-mono" style="min-width: 600px; min-height: 400px;">
+                        
+                        <div class="resizer resizer-top" data-dir="n"></div>
+                        <div class="resizer resizer-bottom" data-dir="s"></div>
+                        <div class="resizer resizer-left" data-dir="w"></div>
+                        <div class="resizer resizer-right" data-dir="e"></div>
+                        <div class="resizer resizer-tl" data-dir="nw"></div>
+                        <div class="resizer resizer-tr" data-dir="ne"></div>
+                        <div class="resizer resizer-bl" data-dir="sw"></div>
+                        <div class="resizer resizer-br" data-dir="se"></div>
+
+                        <div id="fm-header" class="flex justify-between items-center bg-[#FDFBF7] text-[#3E2723] px-3 py-1.5 select-none cursor-grab active:cursor-grabbing relative z-30 border-b border-[#D4A373]/30 shrink-0 h-9">
+                            <div class="text-xs font-mono font-black uppercase tracking-widest flex items-center">
+                                <i class="fa-solid fa-folder-tree text-[#D4A373] mr-2 text-sm"></i> File Manager
+                            </div>
+
+                            <div class="flex gap-1.5 items-center">
+                                <button onclick="minimizeFileManager()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 flex items-center justify-center transition-all">
+                                    <i class="fa-solid fa-minus text-base"></i>
+                                </button>
+                                <button onclick="toggleMaximizeFileManager()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 flex items-center justify-center transition-all">
+                                    <i id="fm-maximize-icon" class="fa-regular fa-window-maximize"></i>
+                                </button>
+                                <button onclick="closeFileManager()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-red-500 hover:text-white active:scale-95 flex items-center justify-center transition-all">
+                                    <i class="fa-solid fa-xmark text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 p-1 px-3 bg-[#FDFBF7] border-b border-[#D4A373]/20 shrink-0 h-9 relative z-20">
+                            
+                            <div class="flex items-center gap-1 shrink-0">
+                                <button onclick="fmGoBack()" id="fm-btn-back" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] disabled:opacity-30 active:scale-95 flex items-center justify-center transition-all">
+                                    <i class="fa-solid fa-arrow-left text-[14px]"></i>
+                                </button>
+                                <button onclick="fmGoForward()" id="fm-btn-forward" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] disabled:opacity-30 active:scale-95 flex items-center justify-center transition-all">
+                                    <i class="fa-solid fa-arrow-right text-[14px]"></i>
+                                </button>
+                                <button onclick="fmRefresh()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 flex items-center justify-center transition-all">
+                                    <i class="fa-solid fa-rotate-right text-[14px]"></i>
+                                </button>
+                                <button onclick="fmGoHome()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 flex items-center justify-center transition-all ml-1">
+                                    <i class="fa-solid fa-house-chimney text-[14px]"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="flex-1 flex items-center bg-white border border-[#D4A373]/50 rounded px-2 focus-within:border-[#D4A373] focus-within:shadow-md transition-all h-7 shadow-sm mx-2">
+                                <i class="fa-solid fa-magnifying-glass text-[#D4A373] text-[14px] mr-2"></i>
+                                <input type="text" 
+                                       id="fm-search" 
+                                       placeholder="Search files" 
+                                       autocomplete="off" 
+                                       spellcheck="false"
+                                       class="flex-1 bg-transparent text-[12px] font-mono outline-none text-[#3E2723] placeholder-[#8D6E63]/50">
+                            </div>
+
+                            <div class="flex items-center gap-1 shrink-0">
+                                <!-- Create new brain layer -->
+                                <button onclick="fmCreateBrainLayer()" class="h-7 px-3 flex items-center justify-center bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-[#D4A373] hover:text-white active:scale-95 transition-all text-[14px] font-black uppercase tracking-wider">
+                                    <i class="fa-solid fa-cubes-stacked mr-1.5 text-[14px]"></i> + New System layer
+                                </button>
+
+                                <button onclick="fmImportFile()" class="h-7 px-3 flex items-center justify-center bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-[#D4A373] hover:text-white active:scale-95 transition-all text-[12px] font-black uppercase tracking-wider">
+                                    <i class="fa-solid fa-upload mr-1.5 text-[12px]"></i> Import
+                                </button>
+
+                                <div class="relative flex items-center">
+                                    <button onclick="toggleDropdown(event, 'fm-export-menu')" class="h-7 px-3 flex items-center justify-center bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all text-[12px] font-black uppercase tracking-wider">
+                                        <i class="fa-solid fa-download mr-1.5 text-[12px]"></i> Export <i class="fa-solid fa-chevron-down ml-1.5 text-[10px]"></i>
+                                    </button>
+                        
+                                    <div id="fm-export-menu" class="dropdown-menu hidden w-[170px] absolute z-50 bg-[#FDFBF7] border border-[#D4A373]/50 shadow-xl rounded-md flex-col origin-top-right" style="top: 100%; right: 0; margin-top: 4px;">
+                                        <button onclick="fmExport('all')" class="w-full px-4 py-2 text-left hover:bg-[#D4A373]/15 text-[12px] font-bold uppercase text-[#8D6E63] transition-colors">
+                                            Export All
+                                        </button>
+                                        <button onclick="fmExport('selected')" class="w-full px-4 py-2 text-left hover:bg-[#D4A373]/15 text-[12px] font-bold uppercase text-[#8D6E63] transition-colors">
+                                            Export Selected
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="relative flex items-center">
+                                    <button onclick="toggleDropdown(event, 'fm-delete-menu')" class="fm-main-delete-btn h-7 px-3 flex items-center justify-center bg-[#FDFBF7] text-red-500 border border-red-300 rounded hover:bg-red-50 hover:text-red-700 active:scale-95 transition-all text-[12px] font-black uppercase tracking-wider">
+                                        <i class="fa-solid fa-trash mr-1.5 text-[12px]"></i> Delete <i class="fa-solid fa-chevron-down ml-1.5 text-[10px]"></i>
+                                    </button>
+                        
+                                    <div id="fm-delete-menu" class="dropdown-menu hidden w-[170px] absolute z-50 bg-[#FDFBF7] border border-red-300 shadow-xl rounded-md flex-col origin-top-right" style="top: 100%; right: 0; margin-top: 4px;">
+                                        <button onclick="fmDelete('all')" class="fm-delete-opt w-full px-4 py-2 text-left text-[12px] font-bold uppercase transition-colors border-none outline-none">
+                                            Delete All
+                                        </button>
+                                        
+                                        <button onclick="fmDelete('selected')" class="fm-delete-opt w-full px-4 py-2 text-left text-[12px] font-bold uppercase transition-colors border-none outline-none">
+                                            Delete Selected
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <button onclick="fmOpenSettings()" title="Add engine models from Ollama list" class="w-7 h-7 flex items-center justify-center bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all ml-1">
+                                    <i class="fa-solid fa-gear text-[14px]"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-1 min-h-0 relative z-10 bg-[#FDFBF7]">
+                            <!-- Left panel: File list and metadata -->
+                            <div id="fm-left-panel" class="w-1/2 flex flex-col bg-[#F4EFEA] relative shrink-0" style="min-width: 200px;">
+                                
+                                <div class="px-4 h-8 bg-[#EFE9E1] border-b border-[#D4A373]/30 text-[12px] font-bold text-[#8D6E63] uppercase tracking-widest flex items-center gap-3 shrink-0 select-none">
+                                    <input type="checkbox" id="fm-select-all" class="accent-[#D4A373] cursor-pointer w-3.5 h-3.5" onclick="fmToggleSelectAll(this)">
+                                    <span class="flex-1 ml-1">Name / Format</span>
+                                    <span class="w-16 text-right">Size</span>
+                                    <span class="w-8"></span> </div>
+                                
+                                <div class="flex-1 overflow-y-auto custom-scroll" dir="rtl">
+                                    <div id="fm-list-container" class="pb-10" dir="ltr">
+                                        </div>
+                                </div>
+
+                                <div id="fm-split-resizer" class="absolute top-0 right-0 bottom-0 w-1.5 cursor-ew-resize bg-transparent hover:bg-[#D4A373]/40 active:bg-[#D4A373] z-20 transition-colors"></div>
+                            </div>
+
+                            <!-- Right panel: Code editor and AI assistance tools -->
+                            <div id="fm-right-panel" class="flex-1 flex flex-col bg-[#FDFBF7] relative min-w-0 overflow-hidden">
+                                
+                                <div id="fm-editor-container" class="flex-1 flex flex-col hidden h-full min-w-0 overflow-hidden">
+                                    <div id="fm-file-header" class="px-4 h-8 border-b border-[#D4A373]/20 flex justify-between items-center bg-white/50 shrink-0">
+                                        <span id="fm-active-file-name" class="text-[12px] font-bold text-[#D4A373]">filename.ext</span>
+                                        <span id="fm-active-file-meta" class="text-[12px] opacity-60 uppercase font-bold text-[#8D6E63]">Metadata</span>
+                                    </div>
+                                    
+                                    <div id="fm-ai-floating-menu" style="display: none;" class="hidden fixed z-[999999] bg-[#FDFBF7] border border-[#D4A373]/40 shadow-2xl rounded-md flex overflow-hidden transition-opacity duration-200 w-max">
+                                        <div class="flex divide-x divide-[#D4A373]/30 h-9 bg-[#FDFBF7]">
+                                            <button class="fm-ai-btn px-3 py-2 text-[#D4A373] hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all flex items-center gap-2 text-[12px] font-mono font-bold uppercase" onclick="fmAiAction('copy')">
+                                                <i class="fa-solid fa-copy pointer-events-none text-[12px]"></i> Copy
+                                            </button>
+                                            <button class="fm-ai-btn px-3 py-2 text-[#D4A373] hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all flex items-center gap-2 text-[12px] font-mono font-bold uppercase" onclick="fmAiAction('ask_here')">
+                                                <i class="fa-solid fa-reply pointer-events-none text-[12px]"></i> Ask Here
+                                            </button>
+                                            <button class="fm-ai-btn px-3 py-2 text-[#D4A373] hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all flex items-center gap-2 text-[12px] font-mono font-bold uppercase" onclick="fmAiAction('regen')">
+                                                <i class="fa-solid fa-arrows-rotate pointer-events-none text-[12px]"></i> Regen Selected
+                                            </button>
+                                            <button class="fm-ai-btn px-3 py-2 text-[#D4A373] hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all flex items-center gap-2 text-[12px] font-mono font-bold uppercase" onclick="fmAiAction('expand')">
+                                                <i class="fa-solid fa-expand pointer-events-none text-[12px]"></i> Expand Selected
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div id="fm-ai-prompt-overlay" style="display: none;" class="hidden absolute top-20 right-10 z-[210] bg-[#FDFBF7] border border-[#D4A373] rounded-md shadow-2xl w-80 flex flex-col overflow-hidden">
+                                        <div id="fm-ai-prompt-header" class="bg-[#EFE9E1] px-3 py-2 border-b border-[#D4A373]/30 flex justify-between items-center cursor-move select-none">
+                                            <span class="text-[12px] font-bold uppercase text-[#8D6E63] tracking-wider flex items-center"><i class="fa-solid fa-robot mr-1.5 text-[#D4A373] text-[12px]"></i> AI Instructions</span>
+                                            <button onclick="fmCloseAiPrompt()" class="text-[#8D6E63] hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark text-[12px]"></i></button>
+                                        </div>
+                                        <div class="p-4 flex flex-col gap-3">
+                                            <input type="text" 
+                                                   id="fm-ai-instruction-input" 
+                                                   placeholder="e.g. Translate to French..." 
+                                                   autocomplete="off" 
+                                                   spellcheck="false"
+                                                   class="w-full p-2 border border-[#D4A373]/50 rounded text-[12px] font-mono outline-none focus:border-[#D4A373] bg-white text-[#3E2723] shadow-inner" 
+                                                   onkeydown="if(event.key === 'Enter') fmExecuteAiAction()">
+                                            <div class="flex justify-end gap-2 mt-1">
+                                                <button class="px-3 py-1.5 text-[12px] uppercase font-bold text-[#8D6E63] hover:bg-red-50 hover:text-red-500 rounded transition-colors" onclick="fmCloseAiPrompt()">Cancel</button>
+                                                <button class="px-4 py-1.5 text-[12px] uppercase font-bold bg-[#D4A373] text-white rounded hover:bg-[#3E2723] transition-colors shadow-sm" onclick="fmExecuteAiAction()">Execute</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="fm-editor-wrapper" class="relative flex-1 w-full h-full overflow-hidden bg-white transition-colors duration-300 flex">
+                                        <div id="fm-line-numbers" style="display: none;" class="w-12 bg-[#FDFBF7] text-[#8D6E63]/40 text-right pr-3 py-4 font-mono text-[14px] leading-[24px] select-none border-r border-[#D4A373]/10 shrink-0 overflow-hidden z-10"></div>
+                                        
+                                        <textarea id="fm-main-editor" 
+                                                  style="tab-size: 4;" 
+                                                  class="flex-1 h-full p-4 border-none outline-none bg-transparent resize-none font-mono text-[14px] leading-[24px] text-[#3E2723] selection:bg-[#D4A373]/30 overflow-auto custom-scroll whitespace-pre" 
+                                                  spellcheck="false"></textarea>
+                                    </div>
+                                    
+                                    <div id="fm-editor-footer" class="p-2 border-t border-[#D4A373]/20 flex justify-between items-center bg-white/50 shrink-0">
+                                        <button id="fm-stop-btn" onclick="fmStopAiAction()" class="hidden h-8 px-4 flex items-center justify-center bg-red-50 text-red-600 border border-red-300 rounded hover:bg-red-100 active:scale-95 transition-all text-[12px] font-black uppercase font-mono tracking-wider shadow-sm">
+                                            <i class="fa-solid fa-stop mr-1.5 text-[12px]"></i> Stop AI
+                                        </button>
+                                        
+                                        <div class="flex gap-2 ml-auto">
+                                            <button onclick="fmCancelEdits()" class="h-8 px-4 flex items-center justify-center bg-[#FDFBF7] text-[#8D6E63] border border-[#D4A373]/40 rounded hover:bg-red-50 hover:text-red-700 active:scale-95 transition-all text-[12px] font-black uppercase font-mono tracking-wider shadow-sm">
+                                                <i class="fa-solid fa-xmark mr-1.5 text-[12px]"></i> Cancel
+                                            </button>
+                                            <button onclick="fmSaveEdits()" class="h-8 px-4 flex items-center justify-center bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all text-[12px] font-black uppercase font-mono tracking-wider shadow-sm">
+                                                <i class="fa-solid fa-check mr-1.5 text-[12px]"></i> Save Changes
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div id="fm-media-viewer" class="flex-1 flex-col h-full min-w-0 overflow-hidden hidden bg-[#EFE9E1]/30">
+                                    <div class="px-4 h-8 border-b border-[#D4A373]/20 flex justify-between items-center bg-white/50 shrink-0">
+                                        <span id="fm-media-file-name" class="text-[12px] font-bold text-[#D4A373]">Document.pdf</span>
+                                        <div class="flex items-center gap-3">
+                                            <button onclick="fmCloseMedia()" class="text-[#8D6E63] hover:text-red-500 transition-colors">
+                                                <i class="fa-solid fa-xmark text-[12px]"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="fm-media-content" class="flex-1 w-full h-full overflow-hidden flex items-center justify-center p-2">
+                                        </div>
+                                </div>
+                                <div id="fm-viewer-placeholder" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center text-[#D4A373]/50 w-full pointer-events-none z-0">
+                                    <i class="fa-solid fa-file-signature text-5xl mb-3"></i>
+                                    <div class="text-[12px] tracking-widest uppercase font-bold text-center">Select a file to view or edit</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="fm-context-menu" class="hidden fixed w-44 bg-[#FDFBF7] border border-[#D4A373] rounded shadow-xl z-[999999] py-1 text-[12px] font-mono text-[#3E2723] select-none">
+                            <div class="px-4 py-1.5 cursor-pointer flex items-center gap-3 transition-transform active:scale-[0.98]" onclick="handleFmContextAction('open')" id="ctx-open"><i class="fa-solid fa-folder-open w-3 text-[#D4A373] text-[12px]"></i> Open</div>
+                            <div class="px-4 py-1.5 cursor-pointer flex items-center gap-3 transition-transform active:scale-[0.98]" onclick="handleFmContextAction('rename')" id="ctx-rename"><i class="fa-solid fa-pen w-3 text-[#8D6E63] text-[12px]"></i> Rename</div>
+                            <div class="px-4 py-1.5 cursor-pointer flex items-center gap-3 transition-transform active:scale-[0.98]" onclick="handleFmContextAction('cut')" id="ctx-cut"><i class="fa-solid fa-scissors w-3 text-[#8D6E63] text-[12px]"></i> Cut</div>
+                            <div class="px-4 py-1.5 cursor-pointer flex items-center gap-3 transition-transform active:scale-[0.98]" onclick="handleFmContextAction('copy')" id="ctx-copy"><i class="fa-solid fa-copy w-3 text-[#8D6E63] text-[12px]"></i> Copy</div>
+                            <div class="px-4 py-1.5 cursor-pointer flex items-center gap-3 transition-transform active:scale-[0.98]" onclick="handleFmContextAction('paste')" id="ctx-paste"><i class="fa-solid fa-paste w-3 text-[#8D6E63] text-[12px]"></i> Paste</div>
+                            <div class="border-t border-[#D4A373]/20 my-1"></div>
+                            <div class="px-4 py-1.5 text-red-600 cursor-pointer flex items-center gap-3 transition-transform active:scale-[0.98]" onclick="handleFmContextAction('delete')" id="ctx-delete"><i class="fa-solid fa-trash w-3 text-[12px]"></i> Delete</div>
+                            <div class="border-t border-[#D4A373]/20 my-1"></div>  
+                            <div class="px-4 py-1.5 text-[#8D6E63] cursor-pointer flex items-center gap-3 transition-transform active:scale-[0.98]" onclick="handleFmContextAction('info')" id="ctx-info"><i class="fa-solid fa-circle-info w-3 text-[12px]"></i> Info</div>
+                        </div>
+                    </div>
+
+                    <!-- Astral Projection: Creative manifestation workspace -->
+                    <div id="astral-window" class="hidden fixed top-[150px] left-[25%] w-[825px] h-[500px] bg-[#FDFBF7] rounded-lg shadow-2xl border border-[#D4A373]/50 flex flex-col z-[160] overflow-hidden font-mono" style="min-width: 500px; min-height: 300px;">
+                        
+                        <div class="resizer resizer-top" data-dir="n"></div>
+                        <div class="resizer resizer-bottom" data-dir="s"></div>
+                        <div class="resizer resizer-left" data-dir="w"></div>
+                        <div class="resizer resizer-right" data-dir="e"></div>
+                        <div class="resizer resizer-tl" data-dir="nw"></div>
+                        <div class="resizer resizer-tr" data-dir="ne"></div>
+                        <div class="resizer resizer-bl" data-dir="sw"></div>
+                        <div class="resizer resizer-br" data-dir="se"></div>
+
+                        <div id="astral-header" ondblclick="toggleMaximizeAstral()" class="flex justify-between items-center bg-[#FDFBF7] text-[#3E2723] px-3 py-1.5 select-none cursor-grab active:cursor-grabbing relative z-30 border-b border-[#D4A373]/30 shrink-0 h-9">
+                            <div class="text-xs font-mono font-black uppercase tracking-widest flex items-center">
+                                <i class="fa-solid fa-wand-magic-sparkles text-[#D4A373] mr-2 text-[20px]"></i> Astral Projection
+                            </div>
+                            <div class="flex gap-1.5 items-center">
+                                <span id="astral-stats" class="mr-4 text-[11px] opacity-70 font-bold">0 Cells | 0 Words</span>
+                                <button onclick="toggleMaximizeAstral()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 flex items-center justify-center transition-all">
+                                    <i id="astral-maximize-icon" class="fa-regular fa-window-maximize text-[16px]"></i>
+                                </button>
+                                <button onclick="minimizeAstral()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 flex items-center justify-center transition-all">
+                                    <i class="fa-solid fa-minus text-[16px]"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center p-2 pl-3 pr-8 bg-[#FDFBF7] border-b border-[#D4A373]/20 shrink-0 h-12 relative z-20 gap-2 overflow-x-auto no-scrollbar">
+                        
+                            <button onclick="addAstralCell()" class="shrink-0 text-[13px] font-mono font-black uppercase tracking-widest border border-[#D4A373]/40 bg-[#FDFBF7] text-[#D4A373] px-3 h-8 rounded hover:bg-white hover:text-[#3E2723] transition-all active:scale-95 flex items-center">
+                                <i class="fa-solid fa-plus mr-1.5 text-[15px]"></i> New Cell
+                            </button>
+
+                            <button onclick="synthesizeAstral('selected')" class="shrink-0 text-[13px] font-mono font-black uppercase tracking-widest border border-[#D4A373]/40 bg-[#FDFBF7] text-[#D4A373] px-3 h-8 rounded hover:bg-white hover:text-[#3E2723] transition-all active:scale-95 flex items-center">
+                                <i class="fa-solid fa-bolt mr-1.5 text-[15px]"></i> Manifest Selected
+                            </button>
+                            
+                            <button onclick="synthesizeAstral('all')" class="shrink-0 text-[13px] font-mono font-black uppercase tracking-widest border border-[#D4A373]/40 bg-[#FDFBF7] text-[#D4A373] px-3 h-8 rounded hover:bg-white hover:text-[#3E2723] transition-all active:scale-95 flex items-center">
+                                <i class="fa-solid fa-bolt-lightning mr-1.5 text-[15px]"></i> Manifest All
+                            </button>
+
+                            <div class="flex-1"></div>
+
+                            <button onclick="clearAstral()" class="shrink-0 text-[13px] font-mono font-black uppercase tracking-widest border border-[#D4A373]/40 bg-[#FDFBF7] text-red-500 px-3 h-8 rounded hover:bg-red-50 hover:text-red-700 transition-all active:scale-95 flex items-center">
+                                <i class="fa-solid fa-trash mr-1.5 text-[15px]"></i> Clear All
+                            </button>
+
+                            <label class="shrink-0 text-[13px] font-mono font-black uppercase tracking-widest border border-[#D4A373]/40 bg-[#FDFBF7] text-[#D4A373] px-3 h-8 rounded hover:bg-white hover:text-[#3E2723] transition-all active:scale-95 flex items-center cursor-pointer select-none">
+                                <span id="astral-master-label" class="mr-2">Mark All</span>
+                                <input type="checkbox" id="astral-master-checkbox" class="accent-[#D4A373] cursor-pointer w-[16px] h-[16px]" onchange="toggleAstralSelectAll(this)">
+                            </label>
+                        </div>
+
+                        <div class="flex-1 bg-[#F4EFEA] overflow-y-auto custom-scroll relative">
+                            <div id="astral-cells-container" class="p-4 pt-1 flex flex-col gap-4 pb-20 min-h-full">
+                                </div>
+                            
+                            <div id="astral-empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-[#8D6E63]/40 pointer-events-none hidden">
+                                <i class="fa-solid fa-meteor text-5xl mb-3"></i>
+                                <div class="text-xs uppercase font-bold tracking-widest">Workspace is empty</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Time Machine: Content version history vault -->
+                    <div id="time-machine-modal" class="hidden fixed inset-0 bg-black/60 z-[99999] flex items-center justify-center backdrop-blur-sm">
+                        <div class="bg-[#FDFBF7] w-[700px] h-[80vh] flex flex-col rounded-xl shadow-[0_0_40px_rgba(212,163,115,0.3)] border-2 border-[#D4A373]">
+                            
+                            <div class="bg-[#282C34] text-[#D4A373] p-4 flex justify-between items-center rounded-t-xl border-b border-[#D4A373]/40">
+                                <div class="font-mono font-black uppercase tracking-widest text-sm flex items-center shadow-text">
+                                    <i class="fa-solid fa-clock-rotate-left mr-3 text-lg animate-pulse"></i> Time Machine Vault
+                                </div>
+                                <button onclick="closeTimeMachine()" class="text-[#8D6E63] hover:text-white hover:bg-red-500/20 w-8 h-8 rounded transition-all flex items-center justify-center">
+                                    <i class="fa-solid fa-xmark text-xl"></i>
+                                </button>
+                            </div>
+                            
+                            <div id="time-machine-content" class="flex-1 overflow-y-auto p-5 custom-scroll bg-[#F4EFEA] flex flex-col gap-4 relative">
+                                </div>
+                            
+                            <div class="bg-[#282C34] text-[#8D6E63] p-2 text-center font-mono text-[10px] uppercase tracking-widest rounded-b-xl border-t border-[#D4A373]/30">
+                                Keeps the last 50 changes. The oldest ones are automatically deleted.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Information and about window -->
+                    <div id="about-window" class="hidden fixed top-[150px] left-[calc(50%-350px)] w-[700px] h-[500px] bg-[#FDFBF7] rounded-lg shadow-2xl border border-[#D4A373]/50 flex flex-col z-[300] overflow-hidden" style="min-width: 300px; min-height: 200px;">
+                        
+                        <div class="resizer resizer-top" data-dir="n"></div>
+                        <div class="resizer resizer-bottom" data-dir="s"></div>
+                        <div class="resizer resizer-left" data-dir="w"></div>
+                        <div class="resizer resizer-right" data-dir="e"></div>
+                        <div class="resizer resizer-tl" data-dir="nw"></div>
+                        <div class="resizer resizer-tr" data-dir="ne"></div>
+                        <div class="resizer resizer-bl" data-dir="sw"></div>
+                        <div class="resizer resizer-br" data-dir="se"></div>
+
+                        <div id="about-header" ondblclick="toggleMaximizeAbout()" class="flex justify-between items-center bg-[#FDFBF7] text-[#3E2723] px-3 py-1.5 select-none cursor-grab active:cursor-grabbing relative z-30 border-b border-[#D4A373]/30 shrink-0 h-9">
+                            <div class="text-xs font-mono font-black uppercase tracking-widest flex items-center">
+                                <i class="fa-solid fa-circle-info text-[#D4A373] mr-2 text-sm"></i> About MAGI
+                            </div>
+
+                            <div class="flex gap-1.5 items-center">
+                                <button onclick="toggleMaximizeAbout()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 flex items-center justify-center transition-all">
+                                    <i id="about-maximize-icon" class="fa-regular fa-window-maximize text-xs"></i>
+                                </button>
+                                <button onclick="closeAboutWindow()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-red-500 hover:text-white active:scale-95 flex items-center justify-center transition-all">
+                                    <i class="fa-solid fa-xmark text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 overflow-y-auto custom-scroll bg-[#FDFBF7] p-6 relative">
+                            <div id="about-loader" class="absolute inset-0 flex flex-col items-center justify-center text-[#D4A373] bg-[#FDFBF7] z-10 hidden">
+                                <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3"></i>
+                                <p class="font-mono text-[10px] uppercase tracking-widest">Loading data...</p>
+                            </div>
+                            
+                            <div id="about-content" class="font-mono text-sm text-[#3E2723] leading-relaxed space-y-4">
+                                </div>
+                        </div>
+                    </div>
+
+                    <!-- Docstral: Professional document editor -->
+                    <div id="docstral-bubble" onclick="restoreDocstral(event)" 
+                         class="hidden fixed bottom-[180px] right-8 w-11 h-11 bg-[#FDFBF7] hover:bg-[#F5E6D3] transition-all cursor-pointer rounded-full shadow-2xl border-2 border-[#D4A373] flex items-center justify-center text-[#D4A373] hover:text-[#3E2723] magi-glow-container hover:shadow-[0_0_15px_rgba(212,163,115,0.6)]"
+                         style="z-index: 40;" title="Restore Docstral">
+                        <i class="fa-solid fa-file-signature text-lg"></i>
+                    </div>
+
+                    <div id="docstral-window" class="hidden fixed z-[150] bg-[#FDFBF7] flex flex-col overflow-hidden" style="top: 0px; left: 0px; width: 100vw; height: 100vh; border-radius: 0px; min-width: 400px; min-height: 300px;">
+                        <div class="resizer resizer-top" data-dir="n"></div>
+                        <div class="resizer resizer-bottom" data-dir="s"></div>
+                        <div class="resizer resizer-left" data-dir="w"></div>
+                        <div class="resizer resizer-right" data-dir="e"></div>
+                        <div class="resizer resizer-tl" data-dir="nw"></div>
+                        <div class="resizer resizer-tr" data-dir="ne"></div>
+                        <div class="resizer resizer-bl" data-dir="sw"></div>
+                        <div class="resizer resizer-br" data-dir="se"></div>
+
+                        <div id="docstral-scale-root" class="flex flex-col flex-1 w-full h-full origin-top-left overflow-hidden relative bg-[#FDFBF7]">
+
+                            <!-- Docstral window bar -->
+                            <div id="docstral-title-bar" class="flex justify-between items-center bg-[#FDFBF7] text-[#3E2723] px-3 py-1.5 select-none cursor-grab active:cursor-grabbing relative z-30 border-b border-[#D4A373]/30 shrink-0 h-9" ondblclick="toggleMaximizeDocstral(event)">
+                                <div class="flex space-x-1.5">
+                                    <button onclick="window.setDocstralMode('page')" id="btn-mode-page" class="w-7 h-7 bg-[#D4A373] text-white border border-[#D4A373]/40 rounded hover:bg-[#D4A373] hover:text-white active:scale-95 transition-all duration-200 ease-out shadow-sm" title="Planchette Mode">
+                                        <i class="fa-solid fa-fire-flame-simple text-[16px]"></i>
+                                    </button>
+                                    <button onclick="window.setDocstralMode('pdf')" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 ease-out shadow-sm" title="PDF Mode" id="btn-mode-pdf">
+                                        <i class="fa-solid fa-file-pdf text-[16px]"></i>
+                                    </button>
+                                    <button onclick="window.setDocstralMode('qr')" id="btn-mode-qr" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-blue-500 hover:text-white active:scale-95 transition-all duration-200 ease-out shadow-sm" title="QR Generator">
+                                        <i class="fa-solid fa-qrcode text-[16px]"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="text-[16px] font-mono font-black uppercase tracking-widest flex items-center pointer-events-none">
+                                    <i class="fa-solid fa-file-signature text-[#D4A373] mr-2 text-[18px]"></i> Docstral
+                                </div>
+                                <div class="flex gap-1.5 items-center">
+                                    <button id="docstral-btn-zen" onclick="toggleZenMode()" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-[#D4A373] hover:text-white active:scale-95 transition-all duration-200 ease-out shadow-sm" title="Zen Mode"><i class="fa-solid fa-feather-pointed text-[14px]"></i></button>
+                                    <button id="docstral-btn-min" onclick="minimizeDocstral(event)" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all duration-200 ease-out shadow-sm" title="Minimize"><i class="fa-solid fa-minus text-[16px]"></i></button>
+                                    <button id="docstral-btn-max" onclick="toggleMaximizeDocstral(event)" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all duration-200 ease-out shadow-sm" title="Maximize"><i id="docstral-maximize-icon" class="fa-solid fa-window-restore text-[16px]"></i></button>
+                                    <button id="docstral-btn-close" onclick="closeDocstral(event)" class="w-7 h-7 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 rounded hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 ease-out shadow-sm" title="Close"><i class="fa-solid fa-xmark text-[16px]"></i></button>
+                                </div>
+                            </div> 
+
+                            <!-- Context menu for on-page text formatting -->
+                            <div id="docstral-context-menu" class="hidden absolute bg-[#FDFBF7] border border-[#D4A373]/50 rounded-lg shadow-2xl z-[3000] flex flex-col overflow-hidden text-[#3E2723] w-56 font-sans">
+                        
+                                <div class="flex items-center h-9 border-b border-[#D4A373]/30 bg-[#F4EFEA] divide-x divide-[#D4A373]/20">
+                                    <button onclick="docstralFormatText('bold')" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] font-black text-[16px] transition-colors" title="Bold">B</button>
+                                    <button onclick="docstralFormatText('italic')" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] italic font-serif font-black text-[16px] transition-colors" title="Italic">I</button>
+                                    <button onclick="docstralFormatText('underline')" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] underline font-black text-[16px] transition-colors" title="Underline">U</button>
+                                    <button onclick="docstralFormatText('strikeThrough')" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] line-through font-black text-[16px] transition-colors" title="Strikethrough">S</button>
+                                    <button onclick="docstralFormatText('superscript')" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] text-[14px] font-black transition-colors" title="Superscript">x<sup>2</sup></button>
+                                    <button onclick="docstralFormatText('subscript')" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] text-[14px] font-black transition-colors" title="Subscript">x<sub>2</sub></button>
+                                    <button onclick="docstralFormatText('removeFormat')" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-red-500 active:scale-95 transition-colors text-[14px]" title="Clear Formatting">
+                                        <i class="fa-solid fa-text-slash"></i>
+                                    </button>
+                                    <button onclick="docstralMenuAction('astral')" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] text-[16px] transition-colors" title="Astral Projection">
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                    </button>
+                                </div>
+                        
+                                <div class="flex flex-col text-xs py-1 divide-y divide-[#D4A373]/10">
+                                    <button onclick="docstralMenuAction('cut')" class="text-left px-3 py-1.5 hover:bg-[#D4A373]/15 flex items-center transition-colors"><i class="fa-solid fa-scissors w-5 text-[#D4A373]"></i> Cut</button>
+                                    <button onclick="docstralMenuAction('copy')" class="text-left px-3 py-1.5 hover:bg-[#D4A373]/15 flex items-center transition-colors"><i class="fa-regular fa-copy w-5 text-[#D4A373]"></i> Copy</button>
+                                    <button onclick="docstralMenuAction('paste')" class="text-left px-3 py-1.5 hover:bg-[#D4A373]/15 flex items-center transition-colors"><i class="fa-solid fa-paste w-5 text-[#D4A373]"></i> Paste</button>
+                                    <button onclick="docstralMenuAction('find_here')" class="text-left px-3 py-1.5 hover:bg-[#D4A373]/15 flex items-center transition-colors"><i class="fa-solid fa-magnifying-glass w-5 text-[#D4A373]"></i> Find Here</button>
+                                    <button onclick="docstralMenuAction('find_inside')" class="text-left px-3 py-1.5 hover:bg-[#D4A373]/15 flex items-center transition-colors"><i class="fa-solid fa-globe w-5 text-[#D4A373]"></i> Find Inside</button>
+                                    <button onclick="docstralMenuAction('find_outside')" class="text-left px-3 py-1.5 hover:bg-[#D4A373]/15 flex items-center transition-colors"><i class="fa-brands fa-google w-5 text-[#D4A373]"></i> Find Outside</button>
+                                </div>
+                        
+                                <div class="p-2 border-t border-[#D4A373]/30 bg-[#F4EFEA]">
+                                    <div class="flex items-center bg-white border border-[#D4A373] rounded px-2 py-1 focus-within:ring-1 focus-within:ring-[#3E2723]">
+                                        <i class="fa-solid fa-fire-flame-simple text-[#D4A373] text-[10px] mr-2"></i>
+                                        <input type="text" id="ctx-ai-prompt-input" autocomplete="off" spellcheck="false" placeholder="Ask Magi..." class="docstral-ai-input w-full bg-transparent outline-none text-xs text-[#3E2723]">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Editor Top Bars: Document settings and formatting -->
+                            <div id="docstral-top-bars" class="flex flex-col border-b border-[#D4A373]/30 bg-[#FDFBF7] relative z-20 shrink-0 w-full">
+                                
+                                <!-- Docstral top bar 1 -->
+                                <div id="docstral-top-bar-1" class="h-9 flex items-center border-b border-[#D4A373]/20 bg-[#FDFBF7] overflow-hidden w-full shrink-0">
+                                    <div class="bar-content-wrapper flex items-center w-full h-full px-2 gap-1.5">
+                                        <div class="flex items-center h-7 bg-[#FDFBF7] border border-[#D4A373]/40 shadow-sm rounded shrink-0 divide-x divide-[#D4A373]/40 overflow-hidden transition-all">
+                                            <button onclick="navigateFiles('prev')" title="Previous document" class="h-full px-2.5 flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] active:bg-[#E8D8C8] transition-colors">
+                                                <i class="fa-solid fa-chevron-left text-[14px]"></i>
+                                            </button>
+                                            <button onclick="navigateFiles('next')" title="Next document" class="h-full px-2.5 flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] active:bg-[#E8D8C8] transition-colors">
+                                                <i class="fa-solid fa-chevron-right text-[14px]"></i>
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="flex items-center h-7 bg-[#FDFBF7] border border-[#D4A373]/40 shadow-sm rounded shrink-0 divide-x divide-[#D4A373]/40 overflow-hidden transition-all">
+                                        
+                                            <button id="docstral-import-btn" onclick="handleImportClick()" class="h-full px-3 flex items-center gap-1.5 text-[#D4A373] hover:bg-white hover:text-[#3E2723] active:bg-[#E8D8C8] transition-colors text-[14px] font-mono font-bold uppercase tracking-tight" title="Format: docx, txt or jdoc.json">
+                                                <i class="fa-solid fa-upload text-[14px]"></i> Import
+                                            </button>
+
+                                            <button onclick="createPlanchetteDoc(event)" class="h-full px-2.5 flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] active:bg-[#E8D8C8] transition-colors" title="Create Document">
+                                                <i class="fa-solid fa-plus text-[14px]"></i>
+                                            </button> 
+                                        </div>
+
+                                        <div class="relative flex-1 group min-w-0">
+                                            <div id="docstral-address-bar" class="flex items-center justify-between bg-white border border-[#D4A373]/50 shadow-sm rounded px-3 h-7 focus-within:border-[#D4A373] transition-all cursor-pointer hover:border-[#D4A373]">
+                                                <span id="current-doc-name" class="font-mono text-xs font-bold text-[#3E2723] truncate">new_document.jdoc</span>
+                                                <i class="fa-solid fa-caret-down text-[#D4A373] text-[14px] ml-2 shrink-0"></i>
+                                            </div>
+                                            <div id="docstral-docs-dropdown" class="hidden absolute top-full left-0 mt-1 w-full bg-white border border-[#D4A373]/30 rounded shadow-xl z-[999999] text-xs py-1 max-h-60 overflow-y-auto"></div>
+                                        </div>
+
+                                        <div class="relative flex items-center shrink-0">
+                                            <div class="flex items-center h-7 bg-[#FDFBF7] border border-[#D4A373]/40 shadow-sm rounded overflow-hidden divide-x divide-[#D4A373]/40">
+
+                                                <button onclick="handleDeleteDoc()" class="h-full px-2.5 flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-red-600 active:bg-[#E8D8C8] transition-colors" title="Delete Document">
+                                                    <i class="fa-solid fa-minus text-[14px]"></i>
+                                                </button>
+
+                                                <button onclick="window.showDynamicExportMenu(event)" class="h-full px-3 flex items-center gap-1.5 text-[#D4A373] hover:bg-white hover:text-[#3E2723] active:bg-[#E8D8C8] transition-colors text-xs font-mono font-bold uppercase">
+                                                    <i class="fa-solid fa-download text-[14px] pointer-events-none"></i> Export
+                                                </button>
+
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex items-center h-7 bg-[#FDFBF7] border border-[#D4A373]/40 shadow-sm rounded shrink-0 divide-x divide-[#D4A373]/40 overflow-hidden transition-all ml-1">
+                                            <button id="btn-undo" title="Ctrl + Z" class="h-full px-2.5 flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] active:bg-[#E8D8C8] transition-colors">
+                                                <i class="fa-solid fa-rotate-left text-[14px]"></i>
+                                            </button>
+                                            <button id="btn-redo" title="Ctrl + Y" class="h-full px-2.5 flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] active:bg-[#E8D8C8] transition-colors">
+                                                <i class="fa-solid fa-rotate-right text-[14px]"></i>
+                                            </button>
+                                        </div>
+                                    </div> 
+                                </div> 
+                                
+                                <!-- Docstral top bar 2 -->
+                                <div id="docstral-top-bar-2" class="h-9 flex items-center bg-[#FDFBF7] relative z-10 border-b border-[#D4A373]/20 overflow-hidden w-full shrink-0">
+                                    <div class="bar-content-wrapper flex items-center justify-center w-full h-full px-2">
+                                        
+                                        <div class="flex items-center shrink-0 h-full divide-x divide-[#D4A373]/40 border-x border-[#D4A373]/40">
+                                            
+                                            <div class="flex items-center shrink-0 h-full divide-x divide-[#D4A373]/40">
+                                                <button id="btn-zoom-out" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] transition-colors" title="Zoom Out">
+                                                    <i class="fa-solid fa-minus text-[12px]"></i>
+                                                </button>
+                                                <input id="zoom-value-input" type="text" value="100%" class="w-12 h-full text-center text-[11px] font-mono font-bold text-[#D4A373] bg-transparent outline-none hover:bg-white focus:bg-white transition-colors" title="Zoom Level">
+                                                <button id="btn-zoom-in" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] transition-colors" title="Zoom In">
+                                                    <i class="fa-solid fa-plus text-[12px]"></i>
+                                                </button>
+                                            </div>
+
+                                            <div class="flex items-center shrink-0 h-full divide-x divide-[#D4A373]/40">
+                                                <button id="btn-find" class="h-full px-3 flex items-center justify-center gap-2 text-[#D4A373] hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all text-[14px] font-mono font-black uppercase" title="Find & Replace">
+                                                    <i class="fa-solid fa-magnifying-glass text-[14px]"></i> 
+                                                    <span class="btn-text-fix">Find and Replace</span>
+                                                </button>
+                                            
+                                                <button id="btn-clipboard" class="h-full px-3 flex items-center justify-center gap-2 text-[#D4A373] hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all text-[14px] font-mono font-black uppercase" title="Clipboard">
+                                                    <i class="fa-regular fa-clipboard text-[14px]"></i> 
+                                                    <span class="btn-text-fix">Clipboard</span>
+                                                </button>
+                                            </div>
+
+                                            <div class="flex items-center shrink-0 h-full divide-x divide-[#D4A373]/40">
+                                                <button id="btn-bold" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] font-black text-[16px] transition-colors" title="Bold">B</button>
+                                                <button id="btn-italic" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] italic font-serif font-black text-[16px] transition-colors" title="Italic">I</button>
+                                                <button id="btn-underline" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] underline font-black text-[16px] transition-colors" title="Underline">U</button>
+                                                <button id="btn-strike" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] line-through font-black text-[16px] transition-colors" title="Strikethrough">S</button>
+                                                <button id="btn-sup" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] text-[14px] font-black transition-colors" title="Superscript">x<sup>2</sup></button>
+                                                <button id="btn-sub" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] text-[14px] font-black transition-colors" title="Subscript">x<sub>2</sub></button>
+                                                <button id="btn-clear-format" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-red-500 active:scale-95 transition-colors text-[14px]" title="Clear Formatting">
+                                                    <i class="fa-solid fa-text-slash"></i>
+                                                </button>
+                                                <button id="btn-astral" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] text-[16px] transition-colors" title="Astral Projection">
+                                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                                </button>
+                                                <button id="btn-eagle-view" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] text-[16px] transition-colors" title="Eagle View">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </button>
+                                                <button id="docstral-btn-media" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] text-[16px] transition-colors" title="Tables">
+                                                    <i class="fa-solid fa-table"></i>
+                                                </button>
+                                            </div>
+
+                                            <div class="relative flex items-center shrink-0 h-full divide-x divide-[#D4A373]/40" id="typography-toolbar">
+                                                <button id="btn-font-family" class="h-full px-3 flex items-center justify-center gap-1.5 text-[#D4A373] hover:bg-white hover:text-[#3E2723] text-[13px] font-mono font-bold uppercase transition-colors" title="Change Font">
+                                                    <i class="fa-solid fa-font text-[12px]"></i>
+                                                    <span class="btn-text-fix">Font</span> 
+                                                    <i class="fa-solid fa-caret-down text-[10px]"></i>
+                                                </button>
+
+                                                <button id="btn-font-minus" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] transition-colors" title="Decrease Font Size (Hold to repeat)">
+                                                    <i class="fa-solid fa-angle-down"></i>
+                                                </button>
+
+                                                <button id="btn-font-plus" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] transition-colors" title="Increase Font Size (Hold to repeat)">
+                                                    <i class="fa-solid fa-angle-up"></i>
+                                                </button>
+
+                                                <button id="btn-font-color" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] transition-colors" title="Text Color">
+                                                    <i class="fa-solid fa-paint-brush"></i>
+                                                </button>
+
+                                                <button id="typography-display" class="h-full px-3 flex items-center justify-center gap-2 text-[#8D6E63] hover:bg-white hover:text-[#3E2723] transition-colors cursor-default select-none w-[220px]" title="Current Font & Size">
+                                                    <i class="fa-solid fa-text-height text-[14px]"></i>
+                                                    <span id="typography-display-text" class="w-full text-[11px] font-mono truncate text-left"></span>
+                                                </button>
+
+                                                <div id="font-family-dropdown" class="hidden absolute top-full left-0 mt-1 w-48 bg-white border border-[#D4A373]/40 rounded shadow-xl z-50 flex flex-col py-1"></div>
+                                                <div id="font-color-dropdown" class="hidden absolute top-full left-[110px] mt-1 p-2 bg-white border border-[#D4A373]/40 rounded shadow-xl z-50 flex flex-col gap-2 w-48">
+                                                    <div class="text-[10px] font-bold text-[#8D6E63] uppercase mb-1">Standard Colors</div>
+                                                    <div class="grid grid-cols-5 gap-1 mb-2" id="basic-color-palette">
+                                                        <button class="w-6 h-6 rounded-full bg-black border border-gray-200" data-color="#000000"></button>
+                                                        <button class="w-6 h-6 rounded-full bg-red-600 border border-gray-200" data-color="#DC2626"></button>
+                                                        <button class="w-6 h-6 rounded-full bg-blue-600 border border-gray-200" data-color="#2563EB"></button>
+                                                        <button class="w-6 h-6 rounded-full bg-green-600 border border-gray-200" data-color="#16A34A"></button>
+                                                        <button class="w-6 h-6 rounded-full bg-yellow-500 border border-gray-200" data-color="#EAB308"></button>
+                                                        <button class="w-6 h-6 rounded-full bg-purple-600 border border-gray-200" data-color="#9333EA"></button>
+                                                        <button class="w-6 h-6 rounded-full bg-orange-500 border border-gray-200" data-color="#F97316"></button>
+                                                        <button class="w-6 h-6 rounded-full bg-pink-500 border border-gray-200" data-color="#EC4899"></button>
+                                                        <button class="w-6 h-6 rounded-full bg-gray-500 border border-gray-200" data-color="#6B7280"></button>
+                                                        <button class="w-6 h-6 rounded-full bg-[#3E2723] border border-gray-200" data-color="#3E2723"></button>
+                                                    </div>
+                                                    <div class="text-[10px] font-bold text-[#8D6E63] uppercase mb-1 border-t border-gray-100 pt-2">Custom Color</div>
+                                                    <input type="color" id="custom-color-picker" class="w-full h-8 cursor-pointer rounded border border-gray-200">
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    </div> 
+                                </div> 
+
+                                <!-- Docstral side bar -->
+                                <div class="flex-1 min-h-0 flex flex-row overflow-hidden relative bg-[#E8D8C8] w-full">
+                                    
+                                    <div id="docstral-sidebar" class="hidden absolute top-0 left-0 h-full w-[320px] bg-[#FDFBF7] border-r border-[#D4A373]/30 flex-col z-[999999] -translate-x-full transition-transform duration-300 shadow-[10px_0_15px_-3px_rgba(0,0,0,0.1)]">
+                                        <div id="docstral-sidebar-header" class="h-9 border-b border-[#D4A373]/30 flex justify-between items-center px-3 bg-[#F4EFEA] shrink-0">
+                                            <span id="docstral-sidebar-title" class="text-xs font-mono font-bold uppercase text-[#8D6E63] tracking-widest">Sidebar</span>
+                                            <button id="docstral-sidebar-close" onclick="closeDocstralSidebar()" class="text-[#8D6E63] hover:text-red-500 transition-colors">
+                                                <i class="fa-solid fa-xmark text-[14px]"></i>
+                                            </button>
+                                        </div>
+                                        <div id="docstral-sidebar-content" class="flex-1 overflow-y-auto flex flex-col text-sm text-[#3E2723] custom-scroll"></div>
+                                    </div>
+
+                                    <!-- Main editor workspace, sidebar, and minimap -->
+                                    <div id="docstral-workspace" class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar bg-[#E8D8C8] relative">
+                                        
+                                    </div>
+
+                                    <div id="eagle-view-rail" class="hidden w-[90px] h-[80vh] my-auto flex-shrink-0 bg-[#3E2723]/5 border-l border-[#D4A373]/20 z-50 cursor-crosshair relative transition-all duration-300">
+                                        <canvas id="eagle-canvas" class="w-full h-full block"></canvas>
+                                    </div>
+
+                                    <div id="eagle-preview-window" class="hidden fixed top-[55%] -translate-y-1/2 right-[200px] w-[400px] h-[650px] bg-[#FDFBF7]/95 backdrop-blur-md border border-[#D4A373]/40 shadow-[0_15px_40px_-5px_rgba(0,0,0,0.15)] rounded-2xl z-[100] overflow-hidden transition-opacity duration-150">
+                                        
+                                        <div id="eagle-preview-content" class="origin-top-left w-[850px] pointer-events-none bg-transparent preview-mode">
+                                        </div>
+                                </div>
+
+                            </div>
+
+                            <!-- Docstral bottom bars -->
+                            <div id="docstral-bottom-bars-wrapper" class="flex flex-col border-t border-[#D4A373]/30 bg-[#FDFBF7] relative z-20 shrink-0 w-full">
+                                
+                                <!-- Docstral bottom bar 2 -->
+                                <div id="docstral-bottom-bar-2" class="h-9 flex items-center bg-[#FDFBF7] relative z-10 border-b border-[#D4A373]/20 w-full shrink-0 overflow-hidden">
+                                    <div class="bar-content-wrapper flex items-center justify-center w-full h-full">
+                                        <div class="flex items-center shrink-0 h-full divide-x divide-[#D4A373]/40 border-x border-[#D4A373]/40">
+                                            
+                                            <div class="flex items-center shrink-0 h-full divide-x divide-[#D4A373]/40">
+                                                <button id="docstral-btn-layers" class="h-full px-4 flex items-center gap-2 text-[#D4A373] hover:bg-white hover:text-[#3E2723] transition-all text-[14px] font-mono font-black uppercase shrink-0">
+                                                    <i class="fa-solid fa-layer-group text-[14px]"></i> 
+                                                    <span class="btn-text-fix">Layers</span>
+                                                </button>
+                                            </div>
+                                            
+                                            <div class="flex items-center shrink-0 h-full divide-x divide-[#D4A373]/40">
+                                                <button id="format-h1" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] font-black text-[14px] transition-all shrink-0">H1</button>
+                                                <button id="format-h2" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] font-black text-[14px] transition-all shrink-0">H2</button>
+                                                <button id="format-h3" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] font-black text-[14px] transition-all shrink-0">H3</button>
+                                                <button id="format-h4" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] font-black text-[14px] transition-all shrink-0">H4</button>
+                                                <button id="format-t" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] font-black text-[14px] transition-all shrink-0">TTL</button>
+                                                <button id="format-q" class="w-9 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] font-black text-[14px] italic transition-all shrink-0">Q</button>
+                                                <button id="format-p" class="px-3 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] text-[14px] font-black transition-all shrink-0">TXT</button>
+                                            </div>
+
+                                            <div class="flex items-center shrink-0 h-full divide-x divide-[#D4A373]/40">
+                                                <button id="align-left" class="w-10 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] transition-all shrink-0"><i class="fa-solid fa-align-left text-[15px]"></i></button>
+                                                <button id="align-center" class="w-10 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] transition-all shrink-0"><i class="fa-solid fa-align-center text-[15px]"></i></button>
+                                                <button id="align-right" class="w-10 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] transition-all shrink-0"><i class="fa-solid fa-align-right text-[15px]"></i></button>
+                                                <button id="align-justify" class="w-10 h-full flex items-center justify-center text-[#D4A373] hover:bg-white hover:text-[#3E2723] transition-all shrink-0"><i class="fa-solid fa-align-justify text-[15px]"></i></button>
+                                            </div>
+
+                                            <div class="flex items-center shrink-0 h-full divide-x divide-[#D4A373]/40">
+                                                <button id="btn-sidebar-pages" class="h-full px-4 flex items-center gap-1.5 text-[#D4A373] hover:bg-white hover:text-[#3E2723] transition-all text-[14px] font-mono font-black uppercase shrink-0">
+                                                    <i class="fa-regular fa-file-lines text-[15px]"></i> 
+                                                    <span class="btn-text-fix">Lines</span>
+                                                </button>
+                                            </div>
+
+                                            <button id="format-display" class="h-full px-3 flex items-center justify-center gap-2 text-[#8D6E63] hover:bg-white hover:text-[#3E2723] transition-colors cursor-default select-none w-[220px]" title="Current Style">
+                                                <i class="fa-solid fa-heading text-[14px]"></i>
+                                                <span id="format-display-text" class="w-full text-[11px] font-mono truncate text-left"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Docstral bottom bar 1 -->
+                                <div id="docstral-bottom-bar-1" class="w-full h-9 flex items-center bg-[#FDFBF7] shrink-0 overflow-hidden">
+                                    <div class="bar-content-wrapper flex items-center w-full h-full px-3 gap-2">
+                                        
+                                        <div class="flex items-center gap-1.5 shrink-0">
+                                            <button id="nav-btn-first" class="w-7 h-7 flex items-center justify-center bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 shadow-sm rounded hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all" title="First Line">
+                                                <i class="fa-solid fa-angles-left text-[12px]"></i>
+                                            </button>
+                                            <button id="nav-btn-prev" class="w-7 h-7 flex items-center justify-center bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 shadow-sm rounded hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all" title="Previous Line">
+                                                <i class="fa-solid fa-angle-left text-[12px]"></i>
+                                            </button>
+
+                                            <div class="flex items-center h-7 bg-[#FDFBF7] border border-[#D4A373]/40 shadow-sm rounded px-1.5 hover:bg-white transition-colors focus-within:border-[#D4A373]">
+                                                <input type="text" id="nav-input-current" value="1" autocomplete="off" class="w-10 text-center bg-transparent text-[12px] font-mono font-bold text-[#D4A373] outline-none">
+                                                <span id="nav-span-total" class="text-[#3E2723]/70 text-[12px] font-mono font-bold ml-1">/ 1</span>
+                                            </div>
+
+                                            <button id="nav-btn-next" class="w-7 h-7 flex items-center justify-center bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 shadow-sm rounded hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all" title="Next Line">
+                                                <i class="fa-solid fa-angle-right text-[12px]"></i>
+                                            </button>
+                                            <button id="nav-btn-last" class="w-7 h-7 flex items-center justify-center bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 shadow-sm rounded hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all" title="Last Line">
+                                                <i class="fa-solid fa-angles-right text-[12px]"></i>
+                                            </button>
+                                        </div>
+
+                                        <div class="flex-1 h-7 flex items-center bg-[#FDFBF7] border border-[#D4A373]/40 shadow-sm rounded px-3 hover:bg-white transition-colors focus-within:border-[#D4A373] focus-within:bg-white shrink-0 min-w-[150px]">
+                                            <i class="fa-solid fa-fire-flame-simple text-[#D4A373] text-[12px] mr-2"></i>
+                                            <input type="text" id="ai-prompt-input" autocomplete="off" spellcheck="false" placeholder="Ask Magi to generate or modify text..." class="docstral-ai-input w-full bg-transparent text-xs text-[#3E2723] placeholder-[#D4A373]/60 outline-none font-mono">
+                                        </div>
+
+                                        <div class="flex items-center gap-1.5 shrink-0">
+                                            <button id="btn-insert-toc" class="h-7 px-3 flex items-center gap-1.5 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 shadow-sm rounded hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all text-xs font-mono font-bold uppercase whitespace-nowrap">
+                                                <i class="fa-solid fa-list text-[13px]"></i> Content
+                                            </button>
+                                            
+                                            <button id="docstral-btn-info" class="h-7 px-3 flex items-center gap-1.5 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 shadow-sm rounded hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all text-xs font-mono font-bold uppercase">
+                                                <i class="fa-solid fa-circle-info text-[13px]"></i> Info
+                                            </button>
+                                            
+                                            <button class="h-7 px-3 flex items-center gap-1.5 bg-[#FDFBF7] text-[#D4A373] border border-[#D4A373]/40 shadow-sm rounded hover:bg-white hover:text-[#3E2723] active:scale-95 transition-all text-xs font-mono font-bold uppercase" title="Print" onclick="printDocument()">
+                                                <i class="fa-solid fa-print text-[13px]"></i> Print
+                                            </button>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+
+        <!-- Main application logic and state management -->
+        <script src="/static/script.js"></script>
+
+    </body>
+</html>

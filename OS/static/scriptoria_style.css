@@ -1,0 +1,330 @@
+
+/* Copyright (c) 2026 Teodor Nenkov
+
+Licensed under the PolyForm Noncommercial License 1.0.0.
+Commercial use requires a separate license.
+
+See LICENSE for details.
+
+Europe, Bulgaria */
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(212, 163, 115, 0.25);
+    border-radius: 10px;
+    box-shadow: inset 0 0 4px rgba(212, 163, 115, 0.1);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(212, 163, 115, 0.5);
+}
+
+.glow-line-b {
+    border-bottom: 1px solid rgba(212, 163, 115, 0.3);
+    box-shadow: 0 4px 10px -2px rgba(212, 163, 115, 0.15);
+}
+.glow-line-t {
+    border-top: 1px solid rgba(212, 163, 115, 0.3);
+    box-shadow: 0 -4px 10px -2px rgba(212, 163, 115, 0.15);
+}
+.glow-line-r {
+    border-right: 1px solid rgba(212, 163, 115, 0.3);
+    box-shadow: 4px 0 10px -2px rgba(212, 163, 115, 0.15);
+}
+.glow-element {
+    background-color: rgba(212, 163, 115, 0.4);
+    box-shadow: 0 0 8px 1px rgba(212, 163, 115, 0.2);
+}
+
+.text-bright-glow {
+    color: #FFFDF5; 
+    text-shadow: 0 0 8px rgba(212, 163, 115, 0.5);
+}
+
+.header-col {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    text-align: center;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(212, 163, 115, 0.8);
+    font-size: 0.7rem;
+    text-shadow: 0 0 8px rgba(212, 163, 115, 0.2);
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-danger,
+.btn-convert {
+    background-color: rgba(212, 163, 115, 0.05); 
+    border: 1px solid rgba(212, 163, 115, 0.3); 
+    color: rgba(230, 204, 178, 0.9); 
+    border-radius: 0.25rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 0 8px rgba(212, 163, 115, 0.15), inset 0 0 4px rgba(212, 163, 115, 0.05);
+}
+
+.btn-primary, .btn-secondary, .btn-danger {
+    padding: 0.35rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+.btn-convert {
+    padding: 0.4rem 0.8rem;
+    font-size: 10px;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover,
+.btn-danger:hover,
+.btn-convert:hover {
+    background-color: rgba(212, 163, 115, 0.15);
+    border-color: rgba(212, 163, 115, 0.8);
+    color: #D4A373;
+    box-shadow: 0 0 15px rgba(212, 163, 115, 0.3), inset 0 0 8px rgba(212, 163, 115, 0.15);
+}
+
+.btn-primary:active,
+.btn-secondary:active,
+.btn-danger:active,
+.btn-convert:active {
+    transform: scale(0.97);
+    border-color: #D4A373;
+    box-shadow: 0 0 20px rgba(212, 163, 115, 0.5), inset 0 0 10px rgba(212, 163, 115, 0.2);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    margin-top: 0.5rem;
+    background-color: rgba(53, 47, 43, 0.95); 
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(212, 163, 115, 0.3); 
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(212, 163, 115, 0.1);
+    border-radius: 0.25rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    z-index: 50;
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 0.7rem;
+}
+
+.dropdown-menu.hidden {
+    display: none;
+}
+
+.dropdown-menu button {
+    padding: 0.5rem 1rem;
+    text-align: left;
+    color: rgba(230, 204, 178, 0.9);
+    transition: all 0.3s ease;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.dropdown-menu button:hover {
+    background-color: rgba(212, 163, 115, 0.15); 
+    color: #D4A373;
+    text-shadow: 0 0 8px rgba(212, 163, 115, 0.4);
+}
+
+.cell-textarea {
+    width: 100%;
+    min-height: 40px; 
+    background: transparent;
+    border: none;
+    color: #f1dfd0; 
+    font-family: monospace;
+    font-size: 11px;
+    resize: none;
+    outline: none;
+    line-height: 1.4;
+    overflow-y: hidden;
+}
+
+.editable-cell {
+    background: #1A1715 !important;
+    border: 1px solid rgba(212, 163, 115, 0.15) !important;
+    border-radius: 6px !important;
+    padding: 6px 10px !important;
+    box-shadow: 0 0 15px rgba(212, 163, 115, 0.04) !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.editable-cell:focus-within {
+    border-color: #D4A373 !important;
+    box-shadow: 0 0 12px rgba(212, 163, 115, 0.35) !important;
+    background: #221F1C !important;
+}
+
+.editable-cell textarea {
+    width: 100%;
+    min-height: 26px !important;
+    background: transparent !important;
+    border: none !important;
+    color: #f1dfd0 !important;
+    font-family: monospace;
+    font-size: 14px;
+    resize: none;
+    outline: none;
+    line-height: 1.4;
+    overflow-y: hidden;
+}
+
+[data-id] {
+    margin-bottom: 8px !important; 
+}
+
+[data-id]:focus-within {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.header-col.glow-line-r {
+    border-right: none !important;
+    box-shadow: none !important;
+}
+
+.dropdown-menu:not(.hidden) ~ * .group\/add,
+.dropdown-menu:not(.hidden) ~ .group\/add,
+body:has(.dropdown-menu:not(.hidden)) .group\/add {
+    pointer-events: none !important;
+    opacity: 0 !important;
+}
+
+#editor-grid.menu-active .group\/add {
+    pointer-events: none !important;
+    opacity: 0 !important;
+}
+
+[data-id] {
+    margin-bottom: 4px !important; 
+}
+
+.group\/add {
+    height: 26px !important; 
+    margin-top: 2px !important;
+    margin-bottom: 2px !important;
+}
+
+.buttons-toolbar-container, 
+body header .flex, 
+main .flex-wrap {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;         
+    flex-wrap: wrap !important;   
+}
+
+.btn-primary, .btn-secondary, .btn-danger {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important; 
+    height: 34px !important;     
+    padding: 0 14px !important;    
+    font-size: 12px !important;    
+    letter-spacing: 0.05em !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.btn-primary i, .btn-secondary i, .btn-danger i {
+    font-size: 13px !important;     
+    display: inline-block;
+    flex-shrink: 0;          
+}
+
+.dropdown-container {
+    display: inline-block !important;
+    flex-shrink: 0 !important;
+}
+
+@media (max-width: 1200px) {
+    
+    .btn-primary span, 
+    .btn-secondary span, 
+    .btn-danger span {
+        display: none !important;
+    }
+
+    .btn-primary .arrow-icon,
+    .btn-secondary .arrow-icon,
+    .btn-danger .arrow-icon {
+        display: none !important;
+    }
+
+    .btn-primary i, 
+    .btn-secondary i, 
+    .btn-danger i {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+
+    .btn-primary, 
+    .btn-secondary, 
+    .btn-danger {
+        width: 36px !important;   
+        height: 36px !important;  
+        padding: 0 !important;    
+        border-radius: 8px !important;
+    }
+}
+
+.btn-convert .short-txt {
+    display: none;
+}
+
+.btn-convert {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+    height: 32px !important;
+    padding: 0 14px !important;
+    border-radius: 6px !important;
+}
+
+@media (max-width: 1200px) {
+    
+    .btn-convert .full-txt {
+        display: none !important;
+    }
+
+    .btn-convert .short-txt {
+        display: inline-block !important;
+        font-weight: 600 !important;
+    }
+
+    .btn-convert {
+        padding: 0 10px !important;
+        font-size: 11px !important;
+        height: 30px !important;
+    }
+
+    #converter-content-wrapper > div {
+        justify-content: flex-start !important;
+        gap: 6px !important;
+    }
+}

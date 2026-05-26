@@ -1,0 +1,4 @@
+{"prompt": "Heading 1", "completion": "// 1 Main text 1 * 1 Main text 2 - 1"}
+{"prompt": "Subheading 1", "completion": "// 2 Main text 3 * 2 Main text 4 - 2"}
+{"prompt": "Heading 2", "completion": "Subheading 2, Subheading 3"}
+{"prompt": "Subheading 3", "completion": "// 3 Main text 5 * 3 Main text 6 - 3"}

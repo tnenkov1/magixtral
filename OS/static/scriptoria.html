@@ -1,0 +1,272 @@
+
+<!--Copyright (c) 2026 Teodor Nenkov
+
+Licensed under the PolyForm Noncommercial License 1.0.0.
+Commercial use requires a separate license.
+
+See LICENSE for details.
+
+Europe, Bulgaria */-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mideXtral.com</title>
+    
+    <script>
+    (function() {
+        const originalWarn = console.warn;
+        console.warn = function(message) {
+            if (typeof message === 'string' && message.includes('cdn.tailwindcss.com should not be used in production')) return;
+            originalWarn.apply(console, arguments);
+        };
+    })();
+    </script>
+
+    <script src="/static/libraries/tailwind.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#2A2623', 
+                        panel: '#352F2B', 
+                        coffee: '#3E2723',
+                        sand: '#E6CCB2',
+                        gold: '#D4A373',
+                        paper: '#FDFBF7'
+                    },
+                    fontFamily: {
+                        serif: ['Cinzel', 'Georgia', 'serif'],
+                        mono: ['JetBrains Mono', 'Courier New', 'monospace'],
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="/static/libraries/all.min.css"> 
+    <link rel="stylesheet" href="/static/libraries/local-fonts.css"> 
+    <link rel="icon" href="data:,"> 
+    <link rel="stylesheet" href="scriptoria_style.css">
+</head>
+
+<body class="bg-darkbg h-screen w-screen flex flex-col overflow-hidden text-sand font-sans selection:bg-gold/40 selection:text-white">
+
+    <!-- ================= TOP HALF: DATASET EDITOR ================= -->
+    <div class="flex-1 flex flex-col glow-line-b relative z-10 min-h-0 transition-all duration-300">
+        
+        <!-- Top Toolbar -->
+        <div class="h-12 bg-panel glow-line-b flex items-center justify-between px-6 shrink-0 z-20">
+            <div class="flex gap-3">
+                <button class="btn-primary" onclick="openGeneratePrompt()">
+                    <i class="fa-solid fa-wand-magic-sparkles mr-2"></i><span>Generate</span>
+                </button>
+
+                <button class="btn-secondary" onclick="triggerMainImport()">
+                    <i class="fa-solid fa-file-import mr-2"></i><span>Import</span>
+                </button>
+            </div>
+            
+            <h1 class="font-serif text-[26px] font-bold tracking-[0.25em] text-gold uppercase text-glow">Scriptoria</h1>
+            
+            <div class="flex gap-3 relative">
+                <!-- Export Dropdown -->
+                <div class="relative dropdown-container">
+                    <button class="btn-secondary" onclick="toggleDropdown('exportMenu')">
+                        <i class="fa-solid fa-download mr-2"></i><span>Export</span> <i class="fa-solid fa-chevron-down ml-1 text-[12px] opacity-80 arrow-icon"></i>
+                    </button>
+                    <div id="exportMenu" class="dropdown-menu hidden right-0 z-[999] isolate pointer-events-auto">
+                        <button onclick="exportData('LMFT')">JSONL FOR LMFT</button>
+                        <button onclick="exportData('IFT')">JSONL FOR IFT</button>
+                        <button onclick="exportData('4-4-2 IFT')">JSONL FOR 4-4-2 IFT</button>
+                        <button onclick="exportData('4-L')">JSONL (4-L)</button>
+                        <button onclick="exportData('4-U')">JSONL (4-U)</button>
+                        <button onclick="exportData('2-W')">JSONL (2-W)</button>
+                    </div>
+                </div>
+                
+                <!-- Clear Dropdown -->
+                <div class="relative dropdown-container">
+                    <button class="btn-danger" onclick="toggleDropdown('clearMenu')">
+                        <i class="fa-solid fa-trash-can mr-2"></i><span>Clear</span> <i class="fa-solid fa-chevron-down ml-1 text-[12px] opacity-80 arrow-icon"></i>
+                    </button>
+                    
+                    <div id="clearMenu" class="dropdown-menu hidden right-0 z-[999]">
+                        <button onclick="clearData('all')" class="text-[#fca5a5] hover:text-[#ef4444] font-bold">Clear all</button>
+                        <div class="glow-element h-[1px] my-1 mx-2"></div>
+                        <button onclick="clearData('instruction')">Clear Instruction</button>
+                        <button onclick="clearData('input')">Clear Input</button>
+                        <button onclick="clearData('output')">Clear Output</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Editor Headers -->
+        <div class="grid grid-cols-3 bg-panel/70 glow-line-b shrink-0 z-10 py-0.5">
+            <div class="header-col glow-line-r">Instruction</div>
+            <div class="header-col glow-line-r">Input</div>
+            <div class="header-col">Output</div>
+        </div>
+
+        <!-- Unified Scrollable Editor Area -->
+        <div class="flex-1 overflow-y-auto custom-scrollbar relative bg-darkbg" id="editor-scroll-container">
+            <div id="editor-grid" class="grid grid-cols-3 gap-x-8 gap-y-2 p-6">
+                <!-- Rendered rows go here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= BOTTOM HALF: CONVERSION CENTER ================= -->
+    <div id="converter-section" class="h-[50vh] flex flex-col bg-darkbg relative z-0 transition-all duration-300 ease-in-out">
+        
+        <!-- Bottom Toolbar -->
+        <div class="h-10 bg-panel glow-line-b flex items-center justify-between px-3 shrink-0 z-10">
+        
+            <!-- LEFT BACK BUTTON -->
+            <a href="http://localhost:8000/static/index.html" class="btn-convert flex items-center justify-center w-8 h-8">
+                <i class="fa-solid fa-arrow-left text-xl"></i>
+            </a>
+        
+            <!-- CENTER TITLE -->
+            <h2 class="font-serif text-[18px] font-bold tracking-[0.2em] text-gold uppercase text-glow">
+                Converter
+            </h2>
+        
+            <!-- RIGHT TOGGLE BUTTON  -->
+            <button id="converter-toggle-btn" onclick="toggleConverterPanel()" class="btn-convert flex items-center justify-center w-8 h-8">
+                <i id="converter-toggle-icon" class="fa-solid fa-chevron-down text-xl transition-transform duration-300"></i>
+            </button>
+        
+        </div>
+
+        <div id="converter-content-wrapper" class="flex flex-col flex-1 overflow-hidden transition-all duration-300">
+            <div class="h-12 glow-line-b flex items-center justify-center gap-3 px-6 shrink-0 bg-darkbg overflow-x-auto custom-scrollbar z-10 text-[12px]">
+                
+                <button class="btn-convert text-[12px]" onclick="convertDoc('LMFT', this)">
+                    <i class="fa-solid fa-play mr-1.5 opacity-60 icon-convert"></i>
+                    <span class="full-txt">CONVERT FOR LMFT</span>
+                    <span class="short-txt">LMFT</span>
+                </button>
+            
+                <button class="btn-convert text-[12px]" onclick="convertDoc('IFT', this)">
+                    <i class="fa-solid fa-play mr-1.5 opacity-60 icon-convert"></i>
+                    <span class="full-txt">CONVERT FOR IFT</span>
+                    <span class="short-txt">IFT</span>
+                </button>
+            
+                <button class="btn-convert text-[12px]" onclick="convertDoc('4-4-2 IFT', this)">
+                    <i class="fa-solid fa-play mr-1.5 opacity-60 icon-convert"></i>
+                    <span class="full-txt">CONVERT FOR 4-4-2 IFT</span>
+                    <span class="short-txt">4-4-2 IFT</span>
+                </button>
+            
+                <button class="btn-convert text-[12px]" onclick="convertDoc('4-L', this)">
+                    <i class="fa-solid fa-play mr-1.5 opacity-60 icon-convert"></i>
+                    <span class="full-txt">CONVERT FOR (4-L)</span>
+                    <span class="short-txt">(4-L)</span>
+                </button>
+            
+                <button class="btn-convert text-[12px]" onclick="convertDoc('4-U', this)">
+                    <i class="fa-solid fa-play mr-1.5 opacity-60 icon-convert"></i>
+                    <span class="full-txt">CONVERT FOR (4-U)</span>
+                    <span class="short-txt">(4-U)</span>
+                </button>
+            
+                <button class="btn-convert text-[12px]" onclick="convertDoc('2-W', this)">
+                    <i class="fa-solid fa-play mr-1.5 opacity-60 icon-convert"></i>
+                    <span class="full-txt">CONVERT FOR (2-W)</span>
+                    <span class="short-txt">(2-W)</span>
+                </button>
+            
+            </div>
+
+            <!-- Three Column Layout -->
+            <div class="flex-1 flex overflow-hidden">
+            
+                <!-- Column 1: Uploaded DOCX -->
+                <div class="w-[30%] flex flex-col glow-line-r bg-panel/30">
+                    <div class="header-col text-[12px] bg-panel/70 glow-line-b !py-1">
+                        List of .docx files
+                    </div>
+                    <div class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1" id="docx-list"></div>
+                    <div class="h-10 glow-line-t flex items-center justify-between px-4 bg-panel shrink-0 z-10">
+                        <span class="text-[12px] font-bold text-gold uppercase tracking-widest opacity-90 text-glow">
+                            Uploaded
+                        </span>
+                        <button class="btn-primary py-1 px-3 text-[12px] tracking-wider" onclick="uploadDocx()">
+                            <i class="fa-solid fa-upload mr-1.5"></i><span>Upload</span>
+                        </button>
+                    </div>
+                </div>
+            
+                <!-- Column 2: Converted JSONL -->
+                <div class="w-[30%] flex flex-col glow-line-r bg-panel/30">
+                    <div class="header-col text-[12px] bg-panel/70 glow-line-b !py-1">
+                        List of .jsonl files
+                    </div>
+                    <div class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1" id="jsonl-list"></div>
+                    <div class="h-10 glow-line-t flex items-center justify-between px-4 bg-panel shrink-0 z-10">
+                        <span class="text-[12px] font-bold text-gold uppercase tracking-widest opacity-90 text-glow">
+                            Converted
+                        </span>
+                        <button class="btn-secondary py-1 px-3 text-[12px] tracking-wider" onclick="downloadAll()">
+                            <i class="fa-solid fa-download mr-1.5"></i><span>Download</span>
+                        </button>
+                    </div>
+                </div>
+            
+                <!-- Column 3: Notes -->
+                <div class="flex-1 flex flex-col bg-darkbg">
+                    <div class="header-col text-[12px] bg-panel/70 glow-line-b flex justify-between px-5 items-center !py-1">
+                        <span>Notes</span>
+                        <i class="fa-solid fa-pen-nib text-gold text-glow"></i>
+                    </div>
+                    <div class="flex-1 p-5">
+                        <textarea id="notes-editor" 
+                                  class="w-full h-full bg-transparent border-none outline-none resize-none font-mono text-[12px] leading-relaxed text-[#FFFFFF] placeholder-gold/40 custom-scrollbar"
+                                  oninput="window.triggerNotesSave()"
+                                  onblur="window.saveNotes()"
+                                  placeholder="Manifest your notes here..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ================= AI GENERATE PROMPT OVERLAY ================= -->
+    <div id="generate-prompt-overlay" class="hidden fixed inset-0 bg-black/60 z-[100] flex items-center justify-center backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-panel border border-[#D4A373]/40 rounded-lg shadow-[0_0_40px_rgba(212,163,115,0.15)] w-[450px] flex flex-col overflow-hidden">
+            
+            <div class="bg-[#2A2623] px-4 py-2 border-b border-[#D4A373]/20 flex justify-between items-center">
+                <span class="text-[11px] font-mono font-bold uppercase text-[#D4A373] tracking-widest text-glow">
+                    <i class="fa-solid fa-robot mr-2"></i>AI Generator
+                </span>
+                <button onclick="closeGeneratePrompt()" class="text-[#8D6E63] hover:text-red-500 transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-5 flex flex-col gap-4 bg-panel">
+                <label class="text-[10px] font-mono text-[#E6CCB2] opacity-80 uppercase tracking-widest">System Prompt (What to generate?)</label>
+                <input type="text" id="generate-instruction-input" 
+                       placeholder="e.g. Generate 5 examples of math word problems..." 
+                       autocomplete="off" spellcheck="false" 
+                       class="w-full p-3 border border-[#D4A373]/30 rounded text-[12px] font-mono outline-none focus:border-[#D4A373] bg-[#2A2623] text-bright-glow shadow-inner" 
+                       onkeydown="if(event.key === 'Enter') executeGenerate()">
+                
+                <div class="flex justify-end gap-3 mt-2">
+                    <button class="px-4 py-2 text-[10px] uppercase font-bold text-[#8D6E63] hover:text-red-400 transition-colors" onclick="closeGeneratePrompt()">Cancel</button>
+                    <button class="btn-primary !px-5 !py-2 text-[10px]" id="btn-execute-gen" onclick="executeGenerate()">Generate Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scriptoria_script.js"></script>
+</body>
+</html>
