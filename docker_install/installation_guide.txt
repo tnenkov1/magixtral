@@ -1,0 +1,25 @@
+1. Download files for Docker:
+CPU setup: Download docker-compose.yml
+GPU setup: Download both docker-compose.yml and docker-compose.gpu.yml.
+
+2. Organize your files
+Place the downloaded file(s) into a dedicated folder on your computer.
+
+3. Initialize the containers:
+Open your Terminal or Command Prompt, navigate to the folder, and run the following commands:
+
+-For standard installation (CPU):
+docker compose up -d
+
+-For NVIDIA GPU installation:
+docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
+
+Note: This will download the necessary Docker images. However, the Ollama language model is not included and must be downloaded separately.
+
+4. Download the language model:
+In the same Terminal or Command Prompt, run: 
+docker compose up
+
+This command will trigger the download of the language model: Mistral-7B-Instruct-v0.3-GGUF:Q4_K_M from Hugging Face. 
+
+Once the process completes, your system will be ready for use at: http://localhost:8000/static/index.html
