@@ -1,0 +1,72 @@
+Required Notice: Copyright (c) 2026 Teodor Nenkov
+
+This project is licensed under the PolyForm Noncommercial License 1.0.0.
+
+You may use, modify, and distribute this software for noncommercial purposes only.
+
+Commercial use requires a separate commercial license from the copyright holder.
+
+See the LICENSE file for full license terms.
+
+Europe, Bulgaria
+
+
+=========================================================================
+Mistral Operating System (MOS) Domains
+=========================================================================
+
+* magiXtral (https://magixtral.com/) 
+* mideXtral (https://midextral.com/) 
+* Olachra   (https://olachra.com/)
+
+=========================================================================
+AI Model Attribution
+=========================================================================
+
+This product utilizes the Mistral-7B-Instruct-v0.3 language model, 
+developed by Mistral AI (https://mistral.ai/).
+Licensed under the Apache License, Version 2.0.
+
+=========================================================================
+Third-Party Software & Library Notices
+=========================================================================
+
+This product makes use of the following third-party software:
+
+* FastAPI (https://fastapi.tiangolo.com/) - MIT License.
+* LangChain & LangChain Ollama (https://github.com/langchain-ai) - MIT License.
+* Ollama (https://ollama.com/) - MIT License.
+* Playwright (https://playwright.dev/) - Apache License 2.0.
+* Sentence-Transformers (https://www.sbert.net/) - Apache License 2.0.
+* ChromaDB (https://www.trychroma.com/) - Apache License 2.0.
+* Openpyxl (https://openpyxl.readthedocs.io/) - MIT License.
+* Python-docx (https://python-docx.readthedocs.io/) - MIT License.
+
+Frontend & Design:
+* Tailwind CSS (https://tailwindcss.com/) - MIT License.
+* Font Awesome (https://fontawesome.com/) - Font Awesome Free License.
+* Highlight.js (https://highlightjs.org/) - BSD 3-Clause License.
+* Local Web Fonts (via local-fonts.css) - Distributed under their respective 
+  licenses (OFL/Apache/MIT).
+* PDF.js (https://mozilla.github.io/pdf.js/) - Apache License 2.0.
+* jsPDF (https://github.com/parallax/jsPDF) - MIT License.
+* html2pdf.js (https://github.com/eKoopmans/html2pdf.js) - MIT License.
+* SortableJS (https://sortablejs.github.io/Sortable/) - MIT License.
+* Morphdom (https://github.com/patrick-steele-idem/morphdom) - MIT License.
+* JSZip (https://github.com/Stuk/jszip) - MIT/GPLv3.
+* QR-Code-Styling (https://github.com/kozea/qr-code-styling) - MIT License.
+
+=========================================================================
+Infrastructure & Containerization
+=========================================================================
+
+* Docker Desktop (https://www.docker.com/products/docker-desktop)
+  Usage is governed by the Docker Software Resources Agreement.
+  Free for personal use, small businesses, and open-source projects.
+  (Commercial use by large enterprises requires a paid subscription).
+
+=========================================================================
+
+Contacts:
+https://github.com/tnenkov1
+[ tnenkov1@gmail.com ]

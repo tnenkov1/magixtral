@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+python-multipart
+websockets
+playwright
+python-docx
+openpyxl
+requests
+langchain-chroma
+langchain-community
+langchain-ollama
+sentence-transformers
+pydantic

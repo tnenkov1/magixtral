@@ -1,0 +1,52 @@
+# Commercial Licensing
+
+This project is available under the PolyForm Noncommercial License 1.0.0 for noncommercial use only.
+
+Any commercial use of this software requires a separate commercial license from the copyright holder.
+
+## What Counts as Commercial Use
+
+Commercial use includes, but is not limited to:
+
+- using the software within a business or organization;
+- integrating the software into a commercial product or service;
+- offering the software as part of a paid service or SaaS platform;
+- internal company usage;
+- generating revenue directly or indirectly from the software;
+- redistribution as part of a commercial solution.
+
+If you are unsure whether your use case is commercial, please contact us.
+
+## Obtaining a Commercial License
+
+To request a commercial license, contact:
+
+tnenkov1@gmail.com
+
+Please include:
+
+- your name or company name;
+- a short description of your project or product;
+- how the software will be used;
+- estimated number of users, customers, or deployments;
+- whether redistribution or SaaS usage is involved.
+
+## License Terms
+
+Commercial licenses may include:
+
+- permission for commercial and internal business use;
+- redistribution rights;
+- SaaS / hosted-service rights;
+- priority support;
+- custom agreements for enterprise deployments.
+
+## Response Time
+
+Commercial licensing requests are typically answered within 3–5 business days.
+
+## Noncommercial License
+
+For noncommercial usage, see the LICENSE file included with this project or visit:
+
+https://polyformproject.org/licenses/noncommercial/1.0.0/

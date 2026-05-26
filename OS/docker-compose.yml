@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_HOST=http://ai-ollama:11434
+    volumes:
+      - ./magi_data/documents:/app/documents
+      - ./magi_data/sessions:/app/sessions_json
+      - ./magi_data/cognitive_layers:/app/cognitive_layers
+    depends_on:
+      - ai-ollama
+
+  ai-ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+    entrypoint: [ 
+      "/bin/sh", 
+      "-c", 
+      "ollama serve & sleep 5 && (ollama list | grep -q 'Mistral-7B-v0.3-Q4_K_M:latest' || (ollama pull hf.co/bartowski/Mistral-7B-Instruct-v0.3-GGUF:Q4_K_M && ollama cp hf.co/bartowski/Mistral-7B-Instruct-v0.3-GGUF:Q4_K_M Mistral-7B-v0.3-Q4_K_M:latest)) ; tail -f /dev/null" 
+    ]
+
+volumes:
+  ollama_data:
