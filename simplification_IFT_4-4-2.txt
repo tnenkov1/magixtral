@@ -1,0 +1,17 @@
+Magixtral_fine_tuning_methodology_abstract_simplification
+
+	The methodology for performing instruction fine-tuning of large language models by quantized low-rank adaptation (QLoRA) with the system 4-4-2 is developed by using principles from electrical enginering discovered by Nikola Tesla.
+
+	With the approach of Nikola Tesla: 
+- By using bidirectional examples in the .jsonl dataset, the fine-tuning process becomes similar to the alternating current (AC).
+- By using three phases (three individual datasets for each phase: learn, understand, work), the fine-tuning process becomes similar to the three phase electrical current. 
+- By using the three phases with the methodology 4-4-2, the fine-tuning process becomes similar to an electrical motor/generator, where each phase examples contribute to the rotation in a specific order (learn, understand, work - understand, work, learn - work, learn, understand). 
+
+//If the rotation order is analyzed, on first glance there is a misalignment, because at the start of each new phase, it starts with different phase examples, but in reality for the rotation to be performed, there is a need of one step backwards. For simlicity it can be said that, there are three individual rotations of examples that makes one full rotation. 
+
+	With the approach of Thomas Edison (mostly used): 
+//It seems that now most of the language models are fine-tuned by the approach of Thomas Edison, where unidirectional examples are used and are similar to the direct current (DC), which is not so effective in production.
+
+	//About the methodology for IFT with the system 4-4-2:
+-The methodology and the system layers of Magixtral Web OS are developed by the help of an hypothetical analogy that every living being in this case - every person is like an individual language model with different operating capacity and capabilities, that is fine-tuned in a specific way in dependence of its own country, language, culture, religion, values, ethics and etc.
+-In this hypothetical analogy, every person seems to be like an AGI, because of the combination of inductive ability to generate external general information (expression) and deductive ability to generate internal specific information(self-awareness).
